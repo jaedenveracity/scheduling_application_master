@@ -2,6 +2,9 @@ package View_Controller;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.*;
+import javafx.scene.Node;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
@@ -15,6 +18,9 @@ import java.time.format.DateTimeFormatter;
 import java.util.TimeZone;
 import Model.User;
 import Model.Database;
+import Model.UserSession;
+import javafx.stage.Stage;
+
 import java.time.*;
 
 
@@ -75,6 +81,22 @@ public class LoginScreenController {
 
                 out.write(LocalTime.now().format(dtf) + " - User login was successful with Username: '" + current_user + "' Location: " + TimeZone.getDefault().getID());
                 out.close();
+
+                UserSession.setInstance(curUser.getUserName());
+
+                System.out.println("Current active session user: " + UserSession.getInstance().toString());
+
+                Parent mainScreenButtonParent = FXMLLoader.load(getClass().getResource("MainScreen.fxml"));
+
+                Scene mainScreenScene = new Scene(mainScreenButtonParent);
+
+                //This line gets the Stage information
+                Stage window = (Stage) ((Node) actionEvent.getSource()).getScene().getWindow();
+
+                window.setScene(mainScreenScene);
+                window.show();
+
+
 
             }
 

@@ -3,3 +3,13 @@
 10:07:58User login failure with attempted Username: sdfsdfsdf' Location: America/Chicago
 10:32:14 - User login was successful with Username: 'test' Location: America/Chicago
 10:32:18 - User login failure with attempted Username: sdfsd' Location: America/Chicago
+14:45:48 - User login was successful with Username: 'test' Location: America/Chicago
+15:03:34 - User login was successful with Username: 'test' Location: America/Chicago
+15:04:17 - User login was successful with Username: 'test' Location: America/Chicago
+15:07:16 - User login was successful with Username: 'test' Location: America/Chicago
+15:48:51 - User login was successful with Username: 'test' Location: America/Chicago
+15:52:34 - User login was successful with Username: 'test' Location: America/Chicago
+15:53:59 - User login was successful with Username: 'test' Location: America/Chicago
+15:57:34 - User login was successful with Username: 'test' Location: America/Chicago
+15:58:20 - User login was successful with Username: 'test' Location: America/Chicago
+15:59:31 - User login was successful with Username: 'test' Location: America/Chicago

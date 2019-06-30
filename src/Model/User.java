@@ -101,17 +101,6 @@ public class User
         return foundUser;
     }
 
-    public static void main(String[] args) {
-
-        System.out.println("test");
-
-        User curUser = User.loginUserCheck("test", "test");
-
-    }
-
-
-
-
 
 
 
