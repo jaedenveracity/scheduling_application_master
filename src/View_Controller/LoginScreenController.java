@@ -97,6 +97,7 @@ public class LoginScreenController {
     @FXML
     public void initialize()
     {
+        //Set failed user attempt to default not show
         loginIssueLabel.setVisible(false);
     }
 
