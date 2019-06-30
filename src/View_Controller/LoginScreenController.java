@@ -15,6 +15,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.time.*;
 import java.time.format.DateTimeFormatter;
+import java.util.Locale;
 import java.util.TimeZone;
 import Model.User;
 import Model.Database;
@@ -35,11 +36,13 @@ public class LoginScreenController {
     int loginAttempts = 0;
     File appendfile = new File("login_attempts.txt");
     DateTimeFormatter dtf = DateTimeFormatter.ofPattern("HH:mm:ss");
+    Locale locale = Locale.getDefault();
 
     public void loginButtonClicked (ActionEvent actionEvent)
     {
 
         BufferedWriter out = null;
+        System.out.println(locale);
 
         //Retrieve user login information
         try {
