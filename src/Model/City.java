@@ -2,8 +2,12 @@ package Model;
 
 public class City
 {
-    int cityId;
     String city;
-    int countryId;
+
+
+    public City(String newCity)
+    {
+        this.city = newCity;
+    }
 
 }

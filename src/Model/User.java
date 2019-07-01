@@ -101,8 +101,5 @@ public class User
         return foundUser;
     }
 
-
-
-
 }
 

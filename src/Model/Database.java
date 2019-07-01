@@ -4,6 +4,8 @@ import com.mysql.cj.jdbc.MysqlDataSource;
 
 import javax.sql.DataSource;
 import java.sql.*;
+import java.util.*;
+import java.sql.Date;
 
 public class Database {
 
@@ -45,5 +47,43 @@ public class Database {
            return mysqlDs;
         }
 
+    }
+
+    public static boolean addCustomer (Customer newCustomer)//, String userPhone, String userAddress, String userCity, String userPostal, String userCountry)
+    {
+        Connection conn = null;
+        Statement stmt = null;
+        PreparedStatement prepStmt = null;
+        ResultSet rs = null;
+        String query = null;
+        int result;
+        Date curDate = new Date(Calendar.getInstance().getTime().getTime());
+        Object param = new java.sql.Timestamp(curDate.getTime());
+
+        try
+        {
+            conn = Database.checkDataSource().getConnection();
+
+            prepStmt = conn.prepareStatement("Insert into customer (customerName, addressId, active, createDate, createdBy, lastUpdateBy) values(?, ?, ?, ?, ?, ?)");
+            prepStmt.setString(1, newCustomer.getCustomerName());
+            prepStmt.setInt (2, 1);
+            prepStmt.setInt(3, 1);
+            prepStmt.setObject(4, param);
+            prepStmt.setString(5, UserSession.getInstance().getUserName());
+            prepStmt.setString(6, UserSession.getInstance().getUserName());
+
+            result = prepStmt.executeUpdate();
+
+            System.out.println(result + " record(s) inserted.");
+
+            conn.close();
+
+        }
+        catch (SQLException e)
+        {
+            e.printStackTrace();
+        }
+
+        return false;
     }
 }
