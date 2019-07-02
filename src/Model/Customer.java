@@ -21,21 +21,40 @@ public class Customer
         this.customerName = userName;
     }
 
+    public Customer()
+    {
+
+    };
+
     public String getCustomerName() {
         return customerName;
+    }
+
+    public void setCustomerName(String customerName) {
+        this.customerName = customerName;
     }
 
     public Address getCustomerAddress() {
         return customerAddress;
     }
 
+    public void setCustomerAddress(Address customerAddress) {
+        this.customerAddress = customerAddress;
+    }
+
     public City getCustomerCity() {
         return customerCity;
+    }
+
+    public void setCustomerCity(City customerCity) {
+        this.customerCity = customerCity;
     }
 
     public Country getCustomerCountry() {
         return customerCountry;
     }
 
-
+    public void setCustomerCountry(Country customerCountry) {
+        this.customerCountry = customerCountry;
+    }
 }

@@ -74,7 +74,32 @@ public class Database {
 
             result = prepStmt.executeUpdate();
 
-            System.out.println(result + " record(s) inserted.");
+            System.out.println(result + " record(s) inserted into customer table");
+
+            prepStmt = conn.prepareStatement("Insert into address (address, postalCode, phone, createDate, createdBy, lastUpdateBy, cityId, address2) values(?,?,?,?,?,?, ?, ?)");
+            prepStmt.setString(1, newCustomer.getCustomerAddress().getAddress());
+            prepStmt.setString(2, newCustomer.getCustomerAddress().getPostalCode());
+            prepStmt.setString(3, newCustomer.getCustomerAddress().getPhoneNumber());
+            prepStmt.setObject(4, param);
+            prepStmt.setString(5, UserSession.getInstance().getUserName());
+            prepStmt.setString(6, UserSession.getInstance().getUserName());
+            prepStmt.setInt(7, 1);
+            prepStmt.setString(8, newCustomer.getCustomerAddress().getAddressTwo());
+
+            result = prepStmt.executeUpdate();
+
+            System.out.println(result + " record(s) inserted into address table");
+
+            prepStmt = conn.prepareStatement("Insert into city (city, countryId, createDate, createdBy, lastUpdateBy) values(?,?,?,?,?)");
+            prepStmt.setString(1, newCustomer.getCustomerCity().getCity());
+            prepStmt.setInt(2, 1);
+            prepStmt.setObject(3, param);
+            prepStmt.setString(4, UserSession.getInstance().getUserName());
+            prepStmt.setString(5, UserSession.getInstance().getUserName());
+
+            result = prepStmt.executeUpdate();
+
+            System.out.println(result + " record(s) inserted into city table");
 
             conn.close();
 
@@ -86,4 +111,29 @@ public class Database {
 
         return false;
     }
+
+    public static ResultSet getAllCustomers()
+    {
+
+        Connection conn;
+        String query;
+        ResultSet customers = null;
+
+        try {
+            conn = Database.checkDataSource().getConnection();
+            query = "Select * from customer";
+            customers = conn.createStatement().executeQuery(query);
+
+
+        }
+        catch (SQLException e)
+        {
+            e.printStackTrace();
+        }
+
+        assert customers != null : "Unable to store customer information and return the resultset from database";
+
+        return customers;
+    }
+
 }

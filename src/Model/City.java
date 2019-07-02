@@ -10,4 +10,7 @@ public class City
         this.city = newCity;
     }
 
+    public String getCity() {
+        return city;
+    }
 }
