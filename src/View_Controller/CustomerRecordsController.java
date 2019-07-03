@@ -1,5 +1,7 @@
 package View_Controller;
 
+import Model.Address;
+import Model.City;
 import Model.Customer;
 import Model.Database;
 import javafx.collections.FXCollections;
@@ -45,7 +47,21 @@ public class CustomerRecordsController {
         String newUserPostal = customerPostalTextField.getText();
         String newUserCountry = customerCountryTextField.getText();
 
-        Customer newCustomer = new Customer(newUserName, newUserPhone, newUserAddress, newUserCity, newUserPostal, newUserCountry);
+        int cityId;
+        int addressId;
+
+
+        //Create city first add to database, find that city's id and set the address fk to that, then create address next and add to database, find that addresses id and set the customer fk to that
+
+        City newCity = new City(newUserCity);
+
+        cityId = Database.getCityId(newCity);
+
+        Address newAddress = new Address(newUserAddress, newUserPostal, newUserPhone, cityId);
+
+        addressId = Database.getAddressId(newAddress);
+
+        Customer newCustomer = new Customer(newUserName, newCity, newAddress, addressId);
 
         Database.addCustomer(newCustomer);
 
@@ -70,16 +86,21 @@ public class CustomerRecordsController {
                 Customer readableCustomer = new Customer();
                 readableCustomer.setCustomerName(customers.getString("customerName"));
 
-                data.add(readableCustomer);
-
                 System.out.println(readableCustomer.getCustomerName());
+
+                data.add(readableCustomer);
             }
-            customerTableView.setItems(data);
         }
         catch (SQLException e)
         {
             e.printStackTrace();
         }
+        finally
+        {
+            customerTableView.setItems(data);
+        }
+                //readableCustomer.getCustomerAddress().setAddress(addresses.getString("address"));
+
 
     }
 }

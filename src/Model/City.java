@@ -4,8 +4,7 @@ public class City
 {
     String city;
 
-
-    public City(String newCity)
+    public City (String newCity)
     {
         this.city = newCity;
     }

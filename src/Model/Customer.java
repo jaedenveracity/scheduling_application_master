@@ -11,6 +11,7 @@ public class Customer
     Address customerAddress;
     City customerCity;
     Country customerCountry;
+    int addressId;
 
 
     public Customer(String userName, String userPhone, String userAddress, String userCity, String userPostal, String userCountry)
@@ -20,6 +21,31 @@ public class Customer
         this.customerCountry = new Country(userCountry);
         this.customerName = userName;
     }
+
+    public Customer(String userName, String userPhone, String userAddress, String userCity, String userPostal, String userCountry, int addressId)
+    {
+        this.customerAddress = new Address(userAddress, userPostal, userPhone);
+        this.customerCity = new City(userCity);
+        this.customerCountry = new Country(userCountry);
+        this.customerName = userName;
+        this.addressId = addressId;
+    }
+
+    public Customer(String userName, City newCity, Address newAddress)
+    {
+        this.customerName = userName;
+        this.customerAddress = newAddress;
+        this.customerCity = newCity;
+    }
+
+    public Customer(String userName, City newCity, Address newAddress, int addressId)
+    {
+        this.customerName = userName;
+        this.customerAddress = newAddress;
+        this.customerCity = newCity;
+        this.addressId = addressId;
+    }
+
 
     public Customer()
     {
@@ -56,5 +82,19 @@ public class Customer
 
     public void setCustomerCountry(Country customerCountry) {
         this.customerCountry = customerCountry;
+    }
+
+    public void setAddress (String newAddress)
+    {
+        this.getCustomerAddress().setAddress(newAddress);
+    }
+
+    public String getAddress ()
+    {
+        return this.getCustomerAddress().getAddress();
+    }
+
+    public int getAddressId() {
+        return addressId;
     }
 }
