@@ -64,17 +64,46 @@ public class CustomerRecordsController {
         Customer newCustomer = new Customer(newUserName, newCity, newAddress, addressId);
 
         Database.addCustomer(newCustomer);
+        data.add(newCustomer);
 
+        customerTableView.refresh();
+
+        customerNameTextField.clear();
+        customerAddressTextField.clear();
+        customerPhoneTextField.clear();
+        customerCityTextField.clear();
+        customerPostalTextField.clear();
+        customerCountryTextField.clear();
+
+    }
+
+    public void refreshButtonClicked (ActionEvent actionEvent)
+    {
+        customerTableView.refresh();
+
+        //TODO: Use similar syntax as the initialize to refresh the data
+    }
+
+    public void deleteCustomerButtonClicked (ActionEvent actionEvent)
+    {
+        Customer tempCustomer = customerTableView.getSelectionModel().getSelectedItem();
+
+        System.out.println(tempCustomer.getCustomerName());
+        data.remove(tempCustomer);
+
+        //TODO: Syntax to delete customer from database
+
+        Database.deleteCustomer(tempCustomer.getCustomerName());
     }
 
     @FXML
     public void initialize ()
     {
         customerNameTableColumn.setCellValueFactory(new PropertyValueFactory<Customer, String>("customerName"));
-        customerPhoneTableColumn.setCellValueFactory(new PropertyValueFactory<Customer, String>("customerPhone"));
-        customerAddressTableColumn.setCellValueFactory(new PropertyValueFactory<Customer, String>("customerAddress"));
-        customerCityTableColumn.setCellValueFactory(new PropertyValueFactory<Customer, String>("customerCity"));
-        customerPostalTableColumn.setCellValueFactory(new PropertyValueFactory<Customer, String>("customerPostal"));
+        customerPhoneTableColumn.setCellValueFactory(new PropertyValueFactory<Customer, String>("phoneNumber"));
+        customerAddressTableColumn.setCellValueFactory(new PropertyValueFactory<Customer, String>("address"));
+        customerCityTableColumn.setCellValueFactory(new PropertyValueFactory<Customer, String>("city"));
+        customerPostalTableColumn.setCellValueFactory(new PropertyValueFactory<Customer, String>("postalCode"));
 
         data = FXCollections.observableArrayList();
 
@@ -84,11 +113,27 @@ public class CustomerRecordsController {
             while (customers.next())
             {
                 Customer readableCustomer = new Customer();
+                Address readableAddress = new Address();
+                City readableCity = new City();
+
+                readableCustomer.setCustomerAddress(readableAddress);
+                //readableCustomer.setCustomerCity(readableCity)
+
+
                 readableCustomer.setCustomerName(customers.getString("customerName"));
+                readableCustomer.setAddress(customers.getString("address"));
+                readableCustomer.setPhoneNumber(customers.getString("phone"));
+                readableCustomer.setPostalCode(customers.getString("postalCode"));
+                readableCustomer.setCity(customers.getString("city"));
 
-                System.out.println(readableCustomer.getCustomerName());
 
+
+                //System.out.println(readableCustomer.getCustomerName());
                 data.add(readableCustomer);
+
+
+
+
             }
         }
         catch (SQLException e)

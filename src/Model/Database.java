@@ -227,20 +227,49 @@ public class Database {
         return addressId;
     }
 
-    public static void main(String[] args) {
+    public static int deleteCustomer (String customerName)
+    {
+        Connection conn;
+        String query;
+        PreparedStatement ps;
+        ResultSet customerIdToDelete = null;
+        int deleteCustomerId;
 
-        City newYork = new City("New York");
+        try {
+            conn = Database.checkDataSource().getConnection();
+            ps = conn.prepareStatement("SELECT customerId FROM customer WHERE customerName = ?");
+            ps.setString(1, customerName);
 
-       int testedId =  Database.getCityId(newYork);
+            customerIdToDelete = ps.executeQuery();
 
-        System.out.println(testedId);
+            while (customerIdToDelete.next())
+            {
+                deleteCustomerId = customerIdToDelete.getInt("CustomerId");
+                System.out.println(deleteCustomerId);
 
-        Address testAddress = new Address();
-        testAddress.setAddress("123 Main");
+                ps = conn.prepareStatement("DELETE from customer where customerId = ?");
+                ps.setInt(1, deleteCustomerId);
 
-        int testedAddressId = Database.getAddressId(testAddress);
+                return ps.executeUpdate();
+            }
 
-        System.out.println(testedAddressId);
+
+        }
+        catch (SQLException e)
+        {
+
+        }
+
+
+
+        return 0;
     }
+
+    public static void main(String[] args)
+    {
+        Database.deleteCustomer("");
+    }
+
+
 
 }

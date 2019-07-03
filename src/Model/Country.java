@@ -8,4 +8,15 @@ public class Country {
     {
         this.country = newCountry;
     }
+
+    public Country(){}
+
+    public void setCountry(String country) {
+        this.country = country;
+    }
+
+    public String getCountry() {
+        return country;
+    }
+
 }

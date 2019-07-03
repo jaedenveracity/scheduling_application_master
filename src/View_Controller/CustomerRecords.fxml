@@ -35,12 +35,13 @@
       <TextField fx:id="customerPhoneTextField" layoutX="137.0" layoutY="94.0" promptText="Enter Name" />
       <TextField fx:id="customerAddressTextField" layoutX="137.0" layoutY="128.0" promptText="Enter Name" />
       <Button layoutX="193.0" layoutY="265.0" mnemonicParsing="false" onAction="#addCustomerButtonClicked" prefHeight="25.0" prefWidth="93.0" text="Add Customer" />
-      <Button layoutX="651.0" layoutY="265.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="127.0" text="Delete Customer" />
+      <Button layoutX="651.0" layoutY="265.0" mnemonicParsing="false" onAction="#deleteCustomerButtonClicked" prefHeight="25.0" prefWidth="127.0" text="Delete Customer" />
       <TextField fx:id="customerCityTextField" layoutX="137.0" layoutY="162.0" promptText="Enter Name" />
       <Label layoutX="23.0" layoutY="164.0" prefHeight="22.0" prefWidth="107.0" text="City:" />
       <Label layoutX="23.0" layoutY="195.0" prefHeight="22.0" prefWidth="107.0" text="Postal Code" />
       <TextField fx:id="customerPostalTextField" layoutX="137.0" layoutY="194.0" promptText="Enter Name" />
       <TextField fx:id="customerCountryTextField" layoutX="137.0" layoutY="224.0" promptText="Enter Name" />
       <Label layoutX="23.0" layoutY="225.0" prefHeight="22.0" prefWidth="107.0" text="Country" />
+      <Button layoutX="515.0" layoutY="265.0" mnemonicParsing="false" onAction="#refreshButtonClicked" prefHeight="25.0" prefWidth="127.0" text="Refresh" />
    </children>
 </AnchorPane>
