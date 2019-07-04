@@ -41,7 +41,8 @@ public class Customer {
         this.customerCity = newCity;
     }
 
-    public Customer(String userName, City newCity, Address newAddress, int addressId) {
+    public Customer(String userName,Country newCountry, City newCity, Address newAddress, int addressId) {
+        this.customerCountry = newCountry;
         this.customerName = new SimpleStringProperty(userName);
         this.customerAddress = newAddress;
         this.customerCity = newCity;

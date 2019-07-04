@@ -65,9 +65,21 @@ public class Database {
         {
             conn = Database.checkDataSource().getConnection();
 
+            //Country Table Insertion
+            prepStmt = conn.prepareStatement("INSERT INTO country (country, createDate, createdBy, lastUpdateBy) values(?,?,?,?)");
+            prepStmt.setString(1, newCustomer.getCustomerCountry().getCountry());
+            prepStmt.setObject(2, param);
+            prepStmt.setString(3, UserSession.getInstance().getUserName());
+            prepStmt.setString(4, UserSession.getInstance().getUserName());
+
+            result = prepStmt.executeUpdate();
+
+            System.out.println(result + " record(s) inserted into country table");
+
+            //City Table Insertion
             prepStmt = conn.prepareStatement("Insert into city (city, countryId, createDate, createdBy, lastUpdateBy) values(?,?,?,?,?)");
             prepStmt.setString(1, newCustomer.getCustomerCity().getCity());
-            prepStmt.setInt(2, 1);
+            prepStmt.setInt(2, Database.getCountryId(newCustomer.getCustomerCountry()));//Database.getCountryId(newCustomer.getCustomerCountry()));
             prepStmt.setObject(3, param);
             prepStmt.setString(4, UserSession.getInstance().getUserName());
             prepStmt.setString(5, UserSession.getInstance().getUserName());
@@ -76,6 +88,7 @@ public class Database {
 
             System.out.println(result + " record(s) inserted into city table");
 
+            //Address Table Insertion
             prepStmt = conn.prepareStatement("Insert into address (address, postalCode, phone, createDate, createdBy, lastUpdateBy, cityId, address2) values(?,?,?,?,?,?, ?, ?)");
             prepStmt.setString(1, newCustomer.getCustomerAddress().getAddress());
             prepStmt.setString(2, newCustomer.getCustomerAddress().getPostalCode());
@@ -90,7 +103,7 @@ public class Database {
 
             System.out.println(result + " record(s) inserted into address table");
 
-
+            //Customer Table Insertion
             prepStmt = conn.prepareStatement("Insert into customer (customerName, addressId, active, createDate, createdBy, lastUpdateBy) values(?, ?, ?, ?, ?, ?)");
             prepStmt.setString(1, newCustomer.getCustomerName());
             prepStmt.setInt (2, Database.getAddressId(newCustomer.getCustomerAddress()));
@@ -195,6 +208,34 @@ public class Database {
         return cityId;
     }
 
+    public static int getCountryId(Country countryName)
+    {
+        Connection conn;
+        String query;
+        PreparedStatement ps;
+        ResultSet countries = null;
+        int countryId = 0;
+
+        try {
+            conn = Database.checkDataSource().getConnection();
+            ps = conn.prepareStatement("Select * FROM country where country = ?");
+            ps.setString(1, countryName.getCountry());
+
+            countries = ps.executeQuery();
+
+            while (countries.next())
+            {
+                countryId = countries.getInt("countryId");
+            }
+        }
+        catch (SQLException e)
+        {
+            e.printStackTrace();
+        }
+
+        return countryId;
+    }
+
     public static int getAddressId(Address addressName)
     {
 
@@ -229,35 +270,113 @@ public class Database {
 
     public static int deleteCustomer (String customerName)
     {
-        Connection conn;
+        //TODO: Verify closure of all these resources
+        Connection conn = null;
         String query;
-        PreparedStatement ps;
-        ResultSet customerIdToDelete = null;
+        PreparedStatement ps = null;
+        ResultSet returnedResultsCustomer = null;
+        ResultSet returnedResultsAddress = null;
         int deleteCustomerId;
+        int customerDeletedCorrectly = 0;
+        int deleteAddressId;
+        int addressDeletedCorrectly = 0;
+        int deleteCityId;
+        int cityDeletedCorrectly = 0;
 
         try {
             conn = Database.checkDataSource().getConnection();
-            ps = conn.prepareStatement("SELECT customerId FROM customer WHERE customerName = ?");
+            ps = conn.prepareStatement("SELECT customerId, addressId  FROM customer WHERE customerName = ?");
             ps.setString(1, customerName);
 
-            customerIdToDelete = ps.executeQuery();
+            returnedResultsCustomer = ps.executeQuery();
 
-            while (customerIdToDelete.next())
+            deleteCustomerId = returnedResultsCustomer.getInt("customerId");
+            deleteAddressId = returnedResultsCustomer.getInt ("addressId");
+
+            ps = conn.prepareStatement ("SELECT cityId FROM address where addressId = ?");
+            returnedResultsAddress = ps.executeQuery();
+
+            deleteCityId = returnedResultsAddress.getInt("cityId");
+
+
+            while (returnedResultsCustomer.next())
             {
-                deleteCustomerId = customerIdToDelete.getInt("CustomerId");
                 System.out.println(deleteCustomerId);
 
                 ps = conn.prepareStatement("DELETE from customer where customerId = ?");
                 ps.setInt(1, deleteCustomerId);
 
-                return ps.executeUpdate();
+               customerDeletedCorrectly =  ps.executeUpdate();
+
+               ps = conn.prepareStatement ("Delete from address where addressId = ?");
+               ps.setInt(1, deleteAddressId);
+
+               addressDeletedCorrectly = ps.executeUpdate();
+
+               if(customerDeletedCorrectly == 1)
+               {
+                   System.out.println("Customer deleted correctly");
+               }
+
+               if (addressDeletedCorrectly == 1)
+               {
+                   System.out.println("Customer Address deleted correctly");
+               }
             }
+            while (returnedResultsAddress.next())
+            {
+                System.out.println("City Id to delete: " + deleteCityId);
 
+                ps = conn.prepareStatement("DELETE from city where cityId = ?");
+                ps.setInt(1, deleteCityId);
 
+                cityDeletedCorrectly = ps.executeUpdate();
+
+                if(cityDeletedCorrectly == 1)
+                {
+                    System.out.println("Customer City deleted correctly");
+                }
+            }
         }
         catch (SQLException e)
         {
+            e.printStackTrace();
+        }
+        finally
+        {
+            if (returnedResultsCustomer != null)
+            {
+                try {
+                    returnedResultsCustomer.close();
+                }
+                catch (SQLException e)
+                {
+                    System.out.println("Unable to close ResultSet 'returnedResults'.");
+                }
+            }
 
+            if (ps != null)
+            {
+                try
+                {
+                    ps.close();
+                }
+                catch (SQLException e)
+                {
+                    System.out.println("Unable to close the prepared statement connection 'ps'.");
+                }
+            }
+
+            if (conn != null)
+            {
+                try{
+                    conn.close();
+                }
+                catch (SQLException e)
+                {
+                    System.out.println("Unable to close the SQL connection 'conn'.");
+                }
+            }
         }
 
 
@@ -267,7 +386,10 @@ public class Database {
 
     public static void main(String[] args)
     {
-        Database.deleteCustomer("");
+        Country newCountry = new Country();
+        newCountry.setCountry("US");
+
+        Database.getCountryId(newCountry);
     }
 
 

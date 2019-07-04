@@ -1,9 +1,6 @@
 package View_Controller;
 
-import Model.Address;
-import Model.City;
-import Model.Customer;
-import Model.Database;
+import Model.*;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -34,6 +31,7 @@ public class CustomerRecordsController {
     @FXML private TableColumn<Customer, String> customerAddressTableColumn;
     @FXML private TableColumn<Customer, String> customerCityTableColumn;
     @FXML private TableColumn<Customer, String> customerPostalTableColumn;
+    @FXML private TableColumn<Customer, String> customerCountryTableColumn;
 
     //To hold customer data retrieved from SQL
     private ObservableList<Customer> data;
@@ -49,9 +47,14 @@ public class CustomerRecordsController {
 
         int cityId;
         int addressId;
+        int countryId;
 
 
         //Create city first add to database, find that city's id and set the address fk to that, then create address next and add to database, find that addresses id and set the customer fk to that
+
+        Country newCountry = new Country(newUserCountry);
+
+        countryId = Database.getCountryId(newCountry);
 
         City newCity = new City(newUserCity);
 
@@ -61,7 +64,7 @@ public class CustomerRecordsController {
 
         addressId = Database.getAddressId(newAddress);
 
-        Customer newCustomer = new Customer(newUserName, newCity, newAddress, addressId);
+        Customer newCustomer = new Customer(newUserName, newCountry, newCity, newAddress, addressId);
 
         Database.addCustomer(newCustomer);
         data.add(newCustomer);
