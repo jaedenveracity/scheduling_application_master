@@ -146,3 +146,13 @@
 12:15:53 - User login was successful with Username: 'test' Location: America/Chicago
 12:18:59 - User login was successful with Username: 'test' Location: America/Chicago
 12:20:45 - User login was successful with Username: 'test' Location: America/Chicago
+07:06:06 - User login was successful with Username: 'test' Location: America/Chicago
+07:16:11 - User login was successful with Username: 'test' Location: America/Chicago
+07:22:35 - User login was successful with Username: 'test' Location: America/Chicago
+07:23:58 - User login was successful with Username: 'test' Location: America/Chicago
+07:27:40 - User login was successful with Username: 'test' Location: America/Chicago
+07:28:48 - User login was successful with Username: 'test' Location: America/Chicago
+07:32:16 - User login was successful with Username: 'test' Location: America/Chicago
+07:38:05 - User login was successful with Username: 'test' Location: America/Chicago
+07:41:31 - User login was successful with Username: 'test' Location: America/Chicago
+07:47:14 - User login was successful with Username: 'test' Location: America/Chicago

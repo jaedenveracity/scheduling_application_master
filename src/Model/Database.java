@@ -274,14 +274,22 @@ public class Database {
         Connection conn = null;
         String query;
         PreparedStatement ps = null;
+
         ResultSet returnedResultsCustomer = null;
         ResultSet returnedResultsAddress = null;
+        ResultSet returnedResultsCity = null;
+
         int deleteCustomerId;
         int customerDeletedCorrectly = 0;
+
         int deleteAddressId;
         int addressDeletedCorrectly = 0;
+
         int deleteCityId;
         int cityDeletedCorrectly = 0;
+
+        int deleteCountryId;
+        int countryDeletedCorrectly = 0;
 
         try {
             conn = Database.checkDataSource().getConnection();
@@ -290,52 +298,68 @@ public class Database {
 
             returnedResultsCustomer = ps.executeQuery();
 
+            returnedResultsCustomer.first();
+
             deleteCustomerId = returnedResultsCustomer.getInt("customerId");
             deleteAddressId = returnedResultsCustomer.getInt ("addressId");
 
-            ps = conn.prepareStatement ("SELECT cityId FROM address where addressId = ?");
+            ps = conn.prepareStatement("SELECT cityId FROM address where addressId = ?");
+            ps.setInt(1, deleteAddressId);
+
             returnedResultsAddress = ps.executeQuery();
+            returnedResultsAddress.first();
 
             deleteCityId = returnedResultsAddress.getInt("cityId");
 
+            ps = conn.prepareStatement("SELECT countryId FROM city where cityId = ?");
+            ps.setInt(1, deleteCityId);
 
-            while (returnedResultsCustomer.next())
-            {
-                System.out.println(deleteCustomerId);
+            returnedResultsCity = ps.executeQuery();
+            returnedResultsCity.first();
 
-                ps = conn.prepareStatement("DELETE from customer where customerId = ?");
-                ps.setInt(1, deleteCustomerId);
+            deleteCountryId = returnedResultsCity.getInt("countryId");
 
-               customerDeletedCorrectly =  ps.executeUpdate();
+            System.out.println("Customer to be deleted: " + Integer.toString(deleteCustomerId));
+            System.out.println("Address to be deleted: " + Integer.toString(deleteAddressId));
+            System.out.println("City to be deleted: " + Integer.toString(deleteCityId));
+            System.out.println("Country to be deleted: " + Integer.toString(deleteCountryId));
 
-               ps = conn.prepareStatement ("Delete from address where addressId = ?");
-               ps.setInt(1, deleteAddressId);
+            ps = conn.prepareStatement("DELETE FROM customer where customerId = ?");
+            ps.setInt(1, deleteCustomerId);
 
-               addressDeletedCorrectly = ps.executeUpdate();
+            customerDeletedCorrectly = ps.executeUpdate();
 
-               if(customerDeletedCorrectly == 1)
-               {
-                   System.out.println("Customer deleted correctly");
-               }
-
-               if (addressDeletedCorrectly == 1)
-               {
-                   System.out.println("Customer Address deleted correctly");
-               }
+            if (customerDeletedCorrectly == 1){
+                System.out.println("Customer deleted successfully.");
             }
-            while (returnedResultsAddress.next())
+
+            ps = conn.prepareStatement("DELETE FROM address where addressId = ?");
+            ps.setInt(1, deleteAddressId);
+
+            addressDeletedCorrectly = ps.executeUpdate();
+
+            if (addressDeletedCorrectly == 1){
+                System.out.println("Address deleted successfully.");
+            }
+
+            ps = conn.prepareStatement("DELETE FROM city WHERE cityId = ?");
+            ps.setInt(1, deleteCityId);
+
+            cityDeletedCorrectly = ps.executeUpdate();
+
+            if (cityDeletedCorrectly == 1)
             {
-                System.out.println("City Id to delete: " + deleteCityId);
+                System.out.println("City deleted successfully.");
+            }
 
-                ps = conn.prepareStatement("DELETE from city where cityId = ?");
-                ps.setInt(1, deleteCityId);
+            ps = conn.prepareStatement("DELETE FROM country where countryId = ?");
+            ps.setInt(1, deleteCountryId);
 
-                cityDeletedCorrectly = ps.executeUpdate();
+            countryDeletedCorrectly = ps.executeUpdate();
 
-                if(cityDeletedCorrectly == 1)
-                {
-                    System.out.println("Customer City deleted correctly");
-                }
+            if (countryDeletedCorrectly == 1)
+            {
+                System.out.println("Country deleted successfully.");
             }
         }
         catch (SQLException e)
