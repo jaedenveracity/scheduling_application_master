@@ -5,11 +5,17 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Node;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.stage.Stage;
 
+import java.io.IOException;
 import java.net.URL;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -99,6 +105,27 @@ public class CustomerRecordsController {
         Database.deleteCustomer(tempCustomer.getCustomerName());
     }
 
+    public void modifyCustomerButtonClicked (ActionEvent actionEvent)
+    {
+        Customer.setModifiableCustomer(customerTableView.getSelectionModel().getSelectedItem());
+
+        try
+        {
+            Parent modifyCustomerSceneParent = FXMLLoader.load(getClass().getResource("CustomerModification.fxml"));
+            Scene modifyCustomerScene = new Scene(modifyCustomerSceneParent);
+
+            //This line gets the Stage information
+            Stage window = (Stage) ((Node) actionEvent.getSource()).getScene().getWindow();
+
+            window.setScene(modifyCustomerScene);
+            window.show();
+        }
+        catch (IOException e)
+        {
+            e.printStackTrace();
+        }
+    }
+
     @FXML
     public void initialize ()
     {
@@ -107,6 +134,7 @@ public class CustomerRecordsController {
         customerAddressTableColumn.setCellValueFactory(new PropertyValueFactory<Customer, String>("address"));
         customerCityTableColumn.setCellValueFactory(new PropertyValueFactory<Customer, String>("city"));
         customerPostalTableColumn.setCellValueFactory(new PropertyValueFactory<Customer, String>("postalCode"));
+        customerCountryTableColumn.setCellValueFactory(new PropertyValueFactory<Customer, String>("country"));
 
         data = FXCollections.observableArrayList();
 
@@ -116,18 +144,22 @@ public class CustomerRecordsController {
             while (customers.next())
             {
                 Customer readableCustomer = new Customer();
+
+                /*
                 Address readableAddress = new Address();
                 City readableCity = new City();
+                Country readableCountry = new Country();
 
                 readableCustomer.setCustomerAddress(readableAddress);
                 //readableCustomer.setCustomerCity(readableCity)
-
+                */
 
                 readableCustomer.setCustomerName(customers.getString("customerName"));
                 readableCustomer.setAddress(customers.getString("address"));
                 readableCustomer.setPhoneNumber(customers.getString("phone"));
                 readableCustomer.setPostalCode(customers.getString("postalCode"));
                 readableCustomer.setCity(customers.getString("city"));
+                readableCustomer.setCountry(customers.getString("country"));
 
 
 

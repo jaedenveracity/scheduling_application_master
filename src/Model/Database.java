@@ -137,7 +137,7 @@ public class Database {
 
         try {
             conn = Database.checkDataSource().getConnection();
-            query = "select * from customer cu join address ad ON cu.addressId = ad.addressId JOIN city ci ON ad.cityId = ci.cityId;";
+            query = "select * from customer cu join address ad ON cu.addressId = ad.addressId JOIN city ci ON ad.cityId = ci.cityId JOIN country ct ON ci.countryId = ct.countryId";
             customers = conn.createStatement().executeQuery(query);
 
 

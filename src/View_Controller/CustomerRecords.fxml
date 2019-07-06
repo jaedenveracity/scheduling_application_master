@@ -43,6 +43,6 @@
       <TextField fx:id="customerPostalTextField" layoutX="137.0" layoutY="194.0" promptText="Enter Postal Code" />
       <TextField fx:id="customerCountryTextField" layoutX="137.0" layoutY="224.0" promptText="Enter Country" />
       <Label layoutX="23.0" layoutY="225.0" prefHeight="22.0" prefWidth="107.0" text="Country" />
-      <Button layoutX="608.0" layoutY="265.0" mnemonicParsing="false" onAction="#refreshButtonClicked" prefHeight="25.0" prefWidth="127.0" text="Refresh" />
+      <Button layoutX="608.0" layoutY="265.0" mnemonicParsing="false" onAction="#modifyCustomerButtonClicked" prefHeight="25.0" prefWidth="127.0" text="Modify Customer" />
    </children>
 </AnchorPane>

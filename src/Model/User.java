@@ -2,7 +2,14 @@ package Model;
 
 import View_Controller.Main;
 import Model.Database;
+import javafx.event.ActionEvent;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Node;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
+import javafx.stage.Stage;
 
+import java.io.IOException;
 import java.sql.*;
 import java.sql.Connection;
 import java.sql.ResultSet;
@@ -45,6 +52,30 @@ public class User
 
 
         return "Sweet";
+    }
+
+    public static void userChangePage (ActionEvent event, String fxmlFileName)
+
+    {
+
+        try
+        {
+            Parent modifyCustomerSceneParent = FXMLLoader.load(User.class.getResource(fxmlFileName));
+            Scene modifyCustomerScene = new Scene(modifyCustomerSceneParent);
+
+            //This line gets the Stage information
+            Stage window = (Stage) ((Node) event.getSource()).getScene().getWindow();
+
+            window.setScene(modifyCustomerScene);
+            window.show();
+        }
+        catch (IOException e)
+        {
+            e.printStackTrace();
+        }
+
+
+
     }
 
     public static User loginUserCheck (String testUserName, String testUserPass)
