@@ -176,6 +176,38 @@ public class Database {
         return addresses;
     }
 
+    public static int getCustomerId(Customer customerName)
+    {
+        Connection conn;
+        String query;
+        PreparedStatement ps;
+        ResultSet customers = null;
+        int customerId = 0;
+
+        try
+        {
+            conn = Database.checkDataSource().getConnection();
+            ps = conn.prepareStatement("SELECT * FROM customer where customerName = ?");
+            ps.setString(1,customerName.getCustomerName());
+
+            customers = ps.executeQuery();
+
+            while (customers.next())
+            {
+                customerId = customers.getInt("customerId");
+            }
+
+
+        }
+        catch (SQLException e)
+        {
+            e.printStackTrace();
+        }
+
+        return customerId;
+
+    }
+
     public static int getCityId(City cityName)
     {
 
@@ -408,7 +440,7 @@ public class Database {
         return 0;
     }
 
-    public static int modifyCustomer (Customer modifiableCustomer, int countryId, int cityId, int addressId)
+    public static int modifyCustomer (Customer modifiableCustomer, int countryId, int cityId, int addressId, int customerId)
     {
 
         Connection conn = null;
@@ -449,7 +481,28 @@ public class Database {
 
             result = prepStmt.executeUpdate();
 
+            prepStmt = conn.prepareStatement("UPDATE address SET postalCode = ? WHERE addressId = ?");
+            prepStmt.setString(1, modifiableCustomer.getPostalCode());
+            prepStmt.setInt (2, addressId);
+
+            result = prepStmt.executeUpdate();
+
+            prepStmt = conn.prepareStatement("UPDATE address SET phone = ? WHERE addressId = ?");
+            prepStmt.setString(1, modifiableCustomer.getPhoneNumber());
+            prepStmt.setInt (2, addressId);
+
+            result = prepStmt.executeUpdate();
+
             System.out.println(result + " record(s) updated in address table");
+
+            //Customer Table Insertion
+            prepStmt = conn.prepareStatement("UPDATE customer SET customerName = ? WHERE customerId = ?");
+            prepStmt.setString(1, modifiableCustomer.getCustomerName());
+            prepStmt.setInt (2, customerId);
+
+            result = prepStmt.executeUpdate();
+
+            System.out.println(result + " record(s) updated in customer table");
 
 
 

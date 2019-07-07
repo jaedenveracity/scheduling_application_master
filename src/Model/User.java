@@ -54,30 +54,6 @@ public class User
         return "Sweet";
     }
 
-    public static void userChangePage (ActionEvent event, String fxmlFileName)
-
-    {
-
-        try
-        {
-            Parent modifyCustomerSceneParent = FXMLLoader.load(User.class.getResource(fxmlFileName));
-            Scene modifyCustomerScene = new Scene(modifyCustomerSceneParent);
-
-            //This line gets the Stage information
-            Stage window = (Stage) ((Node) event.getSource()).getScene().getWindow();
-
-            window.setScene(modifyCustomerScene);
-            window.show();
-        }
-        catch (IOException e)
-        {
-            e.printStackTrace();
-        }
-
-
-
-    }
-
     public static User loginUserCheck (String testUserName, String testUserPass)
     {
         User foundUser = null;

@@ -185,3 +185,7 @@
 08:36:48 - User login was successful with Username: 'test' Location: America/Chicago
 08:43:00 - User login was successful with Username: 'test' Location: America/Chicago
 08:45:47 - User login was successful with Username: 'test' Location: America/Chicago
+09:11:13 - User login was successful with Username: 'test' Location: America/Chicago
+09:12:02 - User login was successful with Username: 'test' Location: America/Chicago
+09:13:28 - User login was successful with Username: 'test' Location: America/Chicago
+09:15:21 - User login was successful with Username: 'test' Location: America/Chicago

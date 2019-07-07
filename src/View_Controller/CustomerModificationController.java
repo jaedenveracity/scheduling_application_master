@@ -63,6 +63,7 @@ public class CustomerModificationController {
         int countryId;
         int cityId;
         int addressId;
+        int customerId;
 
 
 
@@ -78,6 +79,7 @@ public class CustomerModificationController {
         countryId = Database.getCountryId(modifiableCustomer.getCustomerCountry());
         cityId = Database.getCityId(modifiableCustomer.getCustomerCity());
         addressId = Database.getAddressId(modifiableCustomer.getCustomerAddress());
+        customerId = Database.getCustomerId(modifiableCustomer);
 
 
         modifiableCustomer.setCustomerName(customerName);
@@ -87,10 +89,24 @@ public class CustomerModificationController {
         modifiableCustomer.setCity(customerCity);
         modifiableCustomer.setCountry(customerCountry);
 
-        //Test that country is passed correctly to static method
-        System.out.println(modifiableCustomer.getCountry());
+        Database.modifyCustomer(modifiableCustomer, countryId, cityId, addressId, customerId);
 
-        Database.modifyCustomer(modifiableCustomer, countryId, cityId, addressId);
+        try
+        {
+            Parent modifyCustomerSceneParent = FXMLLoader.load(getClass().getResource("customerRecords.fxml"));
+            Scene modifyCustomerScene = new Scene(modifyCustomerSceneParent);
+
+            //This line gets the Stage information
+            Stage window = (Stage) ((Node) actionEvent.getSource()).getScene().getWindow();
+
+            window.setScene(modifyCustomerScene);
+            window.show();
+        }
+        catch (IOException e)
+        {
+            e.printStackTrace();
+        }
+
 
     }
 
