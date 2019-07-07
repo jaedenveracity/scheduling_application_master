@@ -1,6 +1,7 @@
 package View_Controller;
 
 import Model.Customer;
+import Model.Database;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -54,6 +55,43 @@ public class CustomerModificationController {
         {
             e.printStackTrace();
         }
+    }
+
+    public void saveButtonClicked (ActionEvent actionEvent)
+    {
+
+        int countryId;
+        int cityId;
+        int addressId;
+
+
+
+        String customerName = customerNameTextField.getText();
+        String customerAddress = addressTextField.getText();
+        String customerPhoneNumber = phoneNumberTextField.getText();
+        String customerPostalCode = postalCodeTextField.getText();
+        String customerCity = cityTextField.getText();
+        String customerCountry = countryTextField.getText();
+
+        Customer modifiableCustomer = Customer.getModifiableCustomer();
+
+        countryId = Database.getCountryId(modifiableCustomer.getCustomerCountry());
+        cityId = Database.getCityId(modifiableCustomer.getCustomerCity());
+        addressId = Database.getAddressId(modifiableCustomer.getCustomerAddress());
+
+
+        modifiableCustomer.setCustomerName(customerName);
+        modifiableCustomer.setAddress(customerAddress);
+        modifiableCustomer.setPhoneNumber(customerPhoneNumber);
+        modifiableCustomer.setPostalCode(customerPostalCode);
+        modifiableCustomer.setCity(customerCity);
+        modifiableCustomer.setCountry(customerCountry);
+
+        //Test that country is passed correctly to static method
+        System.out.println(modifiableCustomer.getCountry());
+
+        Database.modifyCustomer(modifiableCustomer, countryId, cityId, addressId);
+
     }
 
 

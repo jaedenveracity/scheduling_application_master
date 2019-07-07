@@ -408,6 +408,62 @@ public class Database {
         return 0;
     }
 
+    public static int modifyCustomer (Customer modifiableCustomer, int countryId, int cityId, int addressId)
+    {
+
+        Connection conn = null;
+        Statement stmt = null;
+        PreparedStatement prepStmt = null;
+        ResultSet rs = null;
+        String query = null;
+        int result;
+        Date curDate = new Date(Calendar.getInstance().getTime().getTime());
+        Object param = new java.sql.Timestamp(curDate.getTime());
+
+        try
+        {
+            conn = Database.checkDataSource().getConnection();
+
+            //Country Table Insertion
+            prepStmt = conn.prepareStatement("UPDATE country SET country = ? WHERE countryId = ?");
+            prepStmt.setString(1, modifiableCustomer.getCountry());
+            prepStmt.setInt (2, countryId);
+
+            result = prepStmt.executeUpdate();
+
+            System.out.println(result + " record(s) updated in country table");
+
+            //City Table Insertion
+            prepStmt = conn.prepareStatement("UPDATE city SET city = ? WHERE cityId = ?");
+            prepStmt.setString(1, modifiableCustomer.getCity());
+            prepStmt.setInt (2, cityId);
+
+            result = prepStmt.executeUpdate();
+
+            System.out.println(result + " record(s) updated in city table");
+
+            //Address Table Insertion
+            prepStmt = conn.prepareStatement("UPDATE address SET address = ? WHERE addressId = ?");
+            prepStmt.setString(1, modifiableCustomer.getAddress());
+            prepStmt.setInt (2, addressId);
+
+            result = prepStmt.executeUpdate();
+
+            System.out.println(result + " record(s) updated in address table");
+
+
+
+        }
+        catch (SQLException e)
+        {
+            e.printStackTrace();
+        }
+
+
+        return 0;
+
+    }
+
     public static void main(String[] args)
     {
         Country newCountry = new Country();

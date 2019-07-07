@@ -22,7 +22,7 @@
       <Label layoutX="40.0" layoutY="212.0" prefHeight="23.0" prefWidth="101.0" text="City:" />
       <Label layoutX="40.0" layoutY="247.0" prefHeight="23.0" prefWidth="101.0" text="Country:" />
       <TextField fx:id="countryTextField" layoutX="141.0" layoutY="246.0" />
-      <Button layoutX="147.0" layoutY="298.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="69.0" text="Save" />
+      <Button layoutX="147.0" layoutY="298.0" mnemonicParsing="false" onAction="#saveButtonClicked" prefHeight="25.0" prefWidth="69.0" text="Save" />
       <Button layoutX="221.0" layoutY="298.0" mnemonicParsing="false" onAction="#cancelButtonClicked" prefHeight="25.0" prefWidth="69.0" text="Cancel" />
    </children>
 </AnchorPane>
