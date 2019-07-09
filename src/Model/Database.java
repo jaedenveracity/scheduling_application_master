@@ -2,6 +2,8 @@ package Model;
 
 import com.mysql.cj.jdbc.MysqlDataSource;
 import com.mysql.cj.protocol.Resultset;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 
 import javax.sql.DataSource;
 import java.sql.*;
@@ -14,7 +16,83 @@ public class Database {
     static private final String username = "U05odG";
     static private final String password = "53688562774";
 
+    //Instances cannot be created
+    private Database ()
+    {
 
+    }
+
+    public static int getUserId (UserSession activeUser)
+    {
+        Connection conn;
+        String query;
+        PreparedStatement ps;
+        ResultSet userIdResultSet = null;
+        int userId = 0;
+
+        try {
+            conn = Database.checkDataSource().getConnection();
+            ps = conn.prepareStatement("SELECT userId FROM user where userName = ?");
+            ps.setString(1, activeUser.getUserName());
+
+            userIdResultSet = ps.executeQuery();
+
+            while (userIdResultSet.next())
+            {
+                userId = userIdResultSet.getInt("userId");
+            }
+
+
+
+
+        }
+        catch (SQLException e)
+        {
+            e.printStackTrace();
+        }
+
+        return userId;
+
+    }
+
+    public static ObservableList<Appointment> getCustomerAppointments(int selectedCustomerId) throws SQLException
+    {
+        Connection conn;
+        PreparedStatement ps;
+        ResultSet customerAppointments = null;
+        ObservableList<Appointment> customerAppointmentsList = FXCollections.observableArrayList();
+
+        conn = Database.checkDataSource().getConnection();
+        ps = conn.prepareStatement("SELECT title, description, location, contact FROM appointment WHERE customerId = ?");
+        ps.setInt(1, selectedCustomerId);
+
+        customerAppointments = ps.executeQuery();
+
+        while (customerAppointments.next())
+        {
+
+            String appointmentTitle;
+            String appointmentDescription;
+            String appointmentLocation;
+            String appointmentContact;
+
+            appointmentTitle = customerAppointments.getString("title");
+            appointmentDescription = customerAppointments.getString("description");
+            appointmentLocation = customerAppointments.getString("location");
+            appointmentContact = customerAppointments.getString("contact");
+
+            Appointment nextAppointment = new Appointment(appointmentTitle, appointmentDescription, appointmentLocation, appointmentContact);
+
+            customerAppointmentsList.add(nextAppointment);
+
+
+        }
+
+        return customerAppointmentsList;
+
+
+
+    }
 
     public static boolean checkDbConnection () {
         try (Connection connection = DriverManager.getConnection(url, username, password)) {
@@ -48,6 +126,52 @@ public class Database {
            return mysqlDs;
         }
 
+    }
+
+    public static boolean addAppointment (Appointment newAppointment, String customerSelected)
+    {
+        Connection conn = null;
+        Statement stmt = null;
+        PreparedStatement prepStmt = null;
+        ResultSet rs = null;
+        String query = null;
+        int result;
+        Date curDate = new Date(Calendar.getInstance().getTime().getTime());
+        Object param = new java.sql.Timestamp(curDate.getTime());
+
+        try
+        {
+            conn = Database.checkDataSource().getConnection();
+
+            prepStmt = conn.prepareStatement("INSERT INTO appointment (customerId, title, description, location, contact, createDate, createdBy, lastUpdateBy, userId, type, url, start, end) values (?,?,?,?,?,?,?,?,?,?,?,?,?)");
+            prepStmt.setInt(1, Database.getCustomerId(customerSelected));
+            prepStmt.setString(2, newAppointment.getAppointmentTitle());
+            prepStmt.setString(3, newAppointment.getAppointmentDescription());
+            prepStmt.setString(4, newAppointment.getAppointmentLocation());
+            prepStmt.setString(5, newAppointment.getAppointmentContact());
+            prepStmt.setObject(6, param);
+            prepStmt.setString(7, UserSession.getInstance().getUserName());
+            prepStmt.setString(8, UserSession.getInstance().getUserName());
+            prepStmt.setInt(9, Database.getUserId(UserSession.getInstance()));
+            prepStmt.setString(10, "null");
+            prepStmt.setString(11, "null");
+            prepStmt.setString(12, "2019-01-01 00:00:00");
+            prepStmt.setString(13, "2019-01-01 00:00:00");
+
+            result = prepStmt.executeUpdate();
+
+            System.out.println(result + " record(s) inserted into appointment table");
+
+            return true;
+
+
+        }
+        catch (SQLException e)
+        {
+            e.printStackTrace();
+
+            return false;
+        }
     }
 
     public static boolean addCustomer (Customer newCustomer)//, String userPhone, String userAddress, String userCity, String userPostal, String userCountry)
@@ -116,16 +240,16 @@ public class Database {
 
             System.out.println(result + " record(s) inserted into customer table");
 
-
             conn.close();
+
+            return true;
 
         }
         catch (SQLException e)
         {
             e.printStackTrace();
+            return false;
         }
-
-        return false;
     }
 
     public static ResultSet getAllCustomers()
@@ -189,6 +313,38 @@ public class Database {
             conn = Database.checkDataSource().getConnection();
             ps = conn.prepareStatement("SELECT * FROM customer where customerName = ?");
             ps.setString(1,customerName.getCustomerName());
+
+            customers = ps.executeQuery();
+
+            while (customers.next())
+            {
+                customerId = customers.getInt("customerId");
+            }
+
+
+        }
+        catch (SQLException e)
+        {
+            e.printStackTrace();
+        }
+
+        return customerId;
+
+    }
+    //Overloaded method to take String parameter instead
+    public static int getCustomerId(String customerName)
+    {
+        Connection conn;
+        String query;
+        PreparedStatement ps;
+        ResultSet customers = null;
+        int customerId = 0;
+
+        try
+        {
+            conn = Database.checkDataSource().getConnection();
+            ps = conn.prepareStatement("SELECT * FROM customer where customerName = ?");
+            ps.setString(1,customerName);
 
             customers = ps.executeQuery();
 
@@ -517,6 +673,21 @@ public class Database {
 
     }
 
+    public static ResultSet getAllAppointments() throws SQLException
+    {
+        Connection conn;
+        String query;
+        ResultSet appointments = null;
+
+        conn = Database.checkDataSource().getConnection();
+        query = "Select * from appointment";
+        appointments = conn.createStatement().executeQuery(query);
+
+        assert appointments != null : "Unable to store appointment information and return the resultset from database";
+
+        return appointments;
+    }
+
     public static void main(String[] args)
     {
         Country newCountry = new Country();
@@ -528,3 +699,30 @@ public class Database {
 
 
 }
+
+/*
+    public static ResultSet getAllAddress()
+    {
+
+        Connection conn;
+        String query;
+        ResultSet addresses = null;
+
+        try {
+            conn = Database.checkDataSource().getConnection();
+            query = "Select * from address";
+            addresses = conn.createStatement().executeQuery(query);
+
+
+        }
+        catch (SQLException e)
+        {
+            e.printStackTrace();
+        }
+
+        assert addresses != null : "Unable to store address information and return the resultset from database";
+
+        return addresses;
+    }
+
+ */

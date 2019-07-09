@@ -38,6 +38,7 @@ public class LoginScreenController {
     DateTimeFormatter dtf = DateTimeFormatter.ofPattern("HH:mm:ss");
     Locale locale = Locale.getDefault();
 
+
     public void loginButtonClicked (ActionEvent actionEvent)
     {
 
@@ -70,7 +71,7 @@ public class LoginScreenController {
                     out.newLine();
                 }
 
-                out.write(LocalTime.now().format(dtf) + " - User login failure with attempted Username: " + current_user + "' Location: " + TimeZone.getDefault().getID());
+                out.write(LocalDate.now() + ":" + LocalTime.now().format(dtf) + " - User login failure with attempted Username: " + current_user + "' Location: " + TimeZone.getDefault().getID());
                 out.flush();
 
             }
@@ -82,7 +83,7 @@ public class LoginScreenController {
                     out.newLine();
                 }
 
-                out.write(LocalTime.now().format(dtf) + " - User login was successful with Username: '" + current_user + "' Location: " + TimeZone.getDefault().getID());
+                out.write(LocalDate.now() + ":" + LocalTime.now().format(dtf) + " - User login was successful with Username: '" + current_user + "' Location: " + TimeZone.getDefault().getID());
                 out.close();
 
                 UserSession.setInstance(curUser.getUserName());

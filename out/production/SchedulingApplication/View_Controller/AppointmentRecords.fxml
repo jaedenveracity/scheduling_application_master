@@ -6,9 +6,41 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<AnchorPane xmlns="http://javafx.com/javafx"
-            xmlns:fx="http://javafx.com/fxml"
-            fx:controller="View_Controller.AppointmentRecordsController"
-            prefHeight="400.0" prefWidth="600.0">
-
+<AnchorPane prefHeight="350.0" prefWidth="997.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="View_Controller.AppointmentRecordsController">
+   <children>
+      <TextField fx:id="titleTextField" layoutX="145.0" layoutY="73.0" prefHeight="25.0" prefWidth="168.0" promptText="Enter appointment title" />
+      <TextField fx:id="descriptionTextField" layoutX="145.0" layoutY="104.0" prefHeight="25.0" prefWidth="168.0" promptText="Enter appointment desc" />
+      <TextField fx:id="locationTextField" layoutX="145.0" layoutY="137.0" prefHeight="25.0" prefWidth="168.0" promptText="Enter appointment location" />
+      <TextField fx:id="contactTextField" layoutX="145.0" layoutY="169.0" prefHeight="25.0" prefWidth="168.0" promptText="Enter appointment contact " />
+      <TextField fx:id="typeTextField" layoutX="145.0" layoutY="200.0" prefHeight="25.0" prefWidth="168.0" promptText="Enter appointment type" />
+      <TextField fx:id="urlTextField" layoutX="145.0" layoutY="233.0" prefHeight="25.0" prefWidth="168.0" promptText="Enter appointment URL" />
+      <ComboBox fx:id="customerComboBox" layoutX="145.0" layoutY="40.0" prefWidth="150.0" />
+      <Label layoutX="337.0" layoutY="36.0" prefHeight="17.0" prefWidth="52.0" text="View By:" />
+      <Label layoutX="29.0" layoutY="108.0" prefHeight="17.0" prefWidth="105.0" text="Description:" />
+      <Label layoutX="29.0" layoutY="141.0" prefHeight="17.0" prefWidth="105.0" text="Location:" />
+      <Label layoutX="29.0" layoutY="173.0" prefHeight="17.0" prefWidth="105.0" text="Contact:" />
+      <Label layoutX="29.0" layoutY="204.0" prefHeight="17.0" prefWidth="105.0" text="Type:" />
+      <Label layoutX="29.0" layoutY="237.0" prefHeight="17.0" prefWidth="105.0" text="URL:" />
+      <Label layoutX="29.0" layoutY="44.0" prefHeight="17.0" prefWidth="105.0" text="Customer:" />
+      <TableView fx:id="appointmentTableView" layoutX="337.0" layoutY="71.0" prefHeight="205.0" prefWidth="601.0">
+        <columns>
+          <TableColumn fx:id="appointmentTitleTableColumn" prefWidth="75.0" text="Title" />
+          <TableColumn fx:id="appointmentDescriptionTableColumn" prefWidth="75.0" text="Description" />
+            <TableColumn fx:id="appointmentLocationTableColumn" prefWidth="75.0" text="Location" />
+            <TableColumn fx:id="appointmentContactTableColumn" prefWidth="75.0" text="Contact" />
+            <TableColumn fx:id="appointmenTypeTableColumn" prefWidth="75.0" text="Type" />
+            <TableColumn fx:id="appointmentUrlTableColumn" prefWidth="75.0" text="URL" />
+            <TableColumn fx:id="appointmentStartTableColumn" prefWidth="75.0" text="Start" />
+            <TableColumn fx:id="appointmentEndTableColumn" prefWidth="75.0" text="End" />
+        </columns>
+      </TableView>
+      <RadioButton layoutX="402.0" layoutY="36.0" mnemonicParsing="false" prefHeight="17.0" prefWidth="85.0" text="Week" />
+      <RadioButton layoutX="464.0" layoutY="36.0" mnemonicParsing="false" prefHeight="17.0" prefWidth="85.0" text="Month" />
+      <Label layoutX="29.0" layoutY="77.0" prefHeight="17.0" prefWidth="105.0" text="Title:" />
+      <ComboBox fx:id="customerComboBoxSelector" layoutX="549.0" layoutY="32.0" onAction="#specificCustomerChosen" prefWidth="150.0" />
+      <Label layoutX="549.0" layoutY="14.0" text="Customer:" />
+      <Button layoutX="192.0" layoutY="279.0" mnemonicParsing="false" onAction="#addAppointmentButtonClicked" prefHeight="25.0" prefWidth="121.0" text="Add Appointment" />
+      <Label fx:id="noCustomerSelectedLabel" layoutX="15.0" layoutY="319.0" prefHeight="17.0" prefWidth="347.0" text="No customer selected - please choose a customer and try again." textFill="RED" />
+      <Button layoutX="817.0" layoutY="32.0" mnemonicParsing="false" onAction="#clearSelectionsButtonClicked" prefHeight="25.0" prefWidth="121.0" text="Clear Selections" />
+   </children>
 </AnchorPane>

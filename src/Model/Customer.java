@@ -12,6 +12,7 @@ import javafx.collections.ObservableList;
 public class Customer {
 
     static private ObservableList<Customer> data = FXCollections.observableArrayList();
+    static private ObservableList<String> customerNames = FXCollections.observableArrayList();
     static private Customer modifiableCustomer = null;
 
     private SimpleStringProperty customerName;
@@ -19,6 +20,7 @@ public class Customer {
     private City customerCity;
     private Country customerCountry;
     private SimpleIntegerProperty addressId;
+    private ObservableList<Appointment> customerAppointments = FXCollections.observableArrayList();
 
 
     public Customer(String userName, String userPhone, String userAddress, String userCity, String userPostal, String userCountry) {
@@ -59,6 +61,10 @@ public class Customer {
         this.customerCountry = new Country();
         this.addressId = new SimpleIntegerProperty();
 
+    }
+
+    public static ObservableList<String> getCustomerNames() {
+        return customerNames;
     }
 
     public static Customer getModifiableCustomer() {
