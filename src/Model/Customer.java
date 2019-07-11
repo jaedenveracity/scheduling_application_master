@@ -21,6 +21,7 @@ public class Customer {
     private Country customerCountry;
     private SimpleIntegerProperty addressId;
     private ObservableList<Appointment> customerAppointments = FXCollections.observableArrayList();
+    private SimpleIntegerProperty customerId;
 
 
     public Customer(String userName, String userPhone, String userAddress, String userCity, String userPostal, String userCountry) {
@@ -157,6 +158,18 @@ public class Customer {
     public void setCountry(String newCountry) {this.getCustomerCountry().setCountry(newCountry);}
 
     public String getCountry () {return this.getCustomerCountry().getCountry();}
+
+    public int getCustomerId() {
+        return customerId.get();
+    }
+
+    public void setCustomerId(int customerId) {
+        this.customerId.set(customerId);
+    }
+
+    public SimpleIntegerProperty customerIdProperty() {
+        return customerId;
+    }
 
     public static void main(String[] args) {
 

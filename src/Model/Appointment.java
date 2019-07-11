@@ -13,6 +13,8 @@ public class Appointment {
     private SimpleStringProperty appointmentContact;
     private SimpleStringProperty appointmentType;
     private SimpleStringProperty appointmentUrl;
+    private SimpleStringProperty appointmentStart;
+    private SimpleStringProperty appointmentEnd;
 
     static private ObservableList<Appointment> allAppointments = FXCollections.observableArrayList();
 
@@ -26,6 +28,16 @@ public class Appointment {
         this.appointmentContact = new SimpleStringProperty();
         //this.appointmentType = new SimpleStringProperty();
         //this.appointmentUrl = new SimpleStringProperty();
+        this.appointmentStart = new SimpleStringProperty();
+        this.appointmentEnd = new SimpleStringProperty();
+    }
+
+    public Appointment (String newTitle, String newDescription, String newLocation, String newContact, String newStart, String newEnd)
+    {
+        this.appointmentTitle = new SimpleStringProperty(newTitle);
+        this.appointmentDescription = new SimpleStringProperty(newDescription);
+        this.appointmentLocation = new SimpleStringProperty(newLocation);
+        this.appointmentContact = new SimpleStringProperty(newContact);
     }
 
     public Appointment (String newTitle, String newDescription, String newLocation, String newContact)
@@ -119,6 +131,30 @@ public class Appointment {
 
     public void setAppointmentUrl(String appointmentUrl) {
         this.appointmentUrl.set(appointmentUrl);
+    }
+
+    public String getAppointmentStart() {
+        return appointmentStart.get();
+    }
+
+    public void setAppointmentStart(String appointmentStart) {
+        this.appointmentStart.set(appointmentStart);
+    }
+
+    public SimpleStringProperty appointmentStartProperty() {
+        return appointmentStart;
+    }
+
+    public String getAppointmentEnd() {
+        return appointmentEnd.get();
+    }
+
+    public void setAppointmentEnd(String appointmentEnd) {
+        this.appointmentEnd.set(appointmentEnd);
+    }
+
+    public SimpleStringProperty appointmentEndProperty() {
+        return appointmentEnd;
     }
 }
 

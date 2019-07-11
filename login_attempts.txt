@@ -280,3 +280,13 @@
 2019-07-09:15:18:28 - User login was successful with Username: 'test' Location: America/Chicago
 2019-07-09:15:19:01 - User login was successful with Username: 'test' Location: America/Chicago
 2019-07-09:15:19:31 - User login was successful with Username: 'test' Location: America/Chicago
+2019-07-11:07:03:33 - User login was successful with Username: 'test' Location: America/Chicago
+2019-07-11:07:06:09 - User login was successful with Username: 'test' Location: America/Chicago
+2019-07-11:07:23:10 - User login was successful with Username: 'test' Location: America/Chicago
+2019-07-11:07:25:05 - User login was successful with Username: 'test' Location: America/Chicago
+2019-07-11:07:26:02 - User login was successful with Username: 'test' Location: America/Chicago
+2019-07-11:07:50:59 - User login was successful with Username: 'test' Location: America/Chicago
+2019-07-11:07:51:14 - User login was successful with Username: 'test' Location: America/Chicago
+2019-07-11:07:51:42 - User login was successful with Username: 'test' Location: America/Chicago
+2019-07-11:07:54:31 - User login was successful with Username: 'test' Location: America/Chicago
+2019-07-11:07:55:16 - User login was successful with Username: 'test' Location: America/Chicago

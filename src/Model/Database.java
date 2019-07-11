@@ -155,8 +155,8 @@ public class Database {
             prepStmt.setInt(9, Database.getUserId(UserSession.getInstance()));
             prepStmt.setString(10, "null");
             prepStmt.setString(11, "null");
-            prepStmt.setString(12, "2019-01-01 00:00:00");
-            prepStmt.setString(13, "2019-01-01 00:00:00");
+            prepStmt.setString(12, newAppointment.getAppointmentStart());
+            prepStmt.setString(13, newAppointment.getAppointmentEnd());
 
             result = prepStmt.executeUpdate();
 
@@ -172,6 +172,64 @@ public class Database {
 
             return false;
         }
+    }
+
+    public static int deleteAppointment (int appointmentId)
+    {
+        Connection conn = null;
+        PreparedStatement prepStmt = null;
+        ResultSet rs = null;
+        String query = null;
+        int result = 0;
+
+        try
+        {
+            conn = Database.checkDataSource().getConnection();
+            prepStmt = conn.prepareStatement ("DELETE FROM appointment WHERE appointmentId = ?");
+            prepStmt.setInt(1, appointmentId);
+            result = prepStmt.executeUpdate();
+        }
+        catch (SQLException e)
+        {
+            e.printStackTrace();
+            return result;
+        }
+
+        return result;
+
+    }
+
+    public static int getAppointmentId (Appointment toDeleteAppointment)
+    {
+        Connection conn = null;
+        PreparedStatement prepStmt = null;
+        ResultSet rs = null;
+        String query = null;
+        boolean result;
+        int appointmentId = 0;
+
+        try
+        {
+            conn = Database.checkDataSource().getConnection();
+            prepStmt = conn.prepareStatement("SELECT appointmentId FROM appointment WHERE title = ? AND description = ? AND location = ? AND contact = ?");
+            prepStmt.setString(1, toDeleteAppointment.getAppointmentTitle());
+            prepStmt.setString(2, toDeleteAppointment.getAppointmentDescription());
+            prepStmt.setString(3, toDeleteAppointment.getAppointmentLocation());
+            prepStmt.setString(4, toDeleteAppointment.getAppointmentContact());
+            rs = prepStmt.executeQuery();
+
+            while (rs.next())
+            {
+                appointmentId = rs.getInt("appointmentId");
+            }
+        }
+        catch (SQLException e)
+        {
+            e.printStackTrace();
+
+        }
+
+        return appointmentId;
     }
 
     public static boolean addCustomer (Customer newCustomer)//, String userPhone, String userAddress, String userCity, String userPostal, String userCountry)

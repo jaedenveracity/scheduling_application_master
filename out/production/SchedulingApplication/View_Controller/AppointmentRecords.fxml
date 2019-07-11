@@ -6,7 +6,7 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<AnchorPane prefHeight="350.0" prefWidth="997.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="View_Controller.AppointmentRecordsController">
+<AnchorPane prefHeight="401.0" prefWidth="997.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="View_Controller.AppointmentRecordsController">
    <children>
       <TextField fx:id="titleTextField" layoutX="145.0" layoutY="73.0" prefHeight="25.0" prefWidth="168.0" promptText="Enter appointment title" />
       <TextField fx:id="descriptionTextField" layoutX="145.0" layoutY="104.0" prefHeight="25.0" prefWidth="168.0" promptText="Enter appointment desc" />
@@ -39,8 +39,13 @@
       <Label layoutX="29.0" layoutY="77.0" prefHeight="17.0" prefWidth="105.0" text="Title:" />
       <ComboBox fx:id="customerComboBoxSelector" layoutX="549.0" layoutY="32.0" onAction="#specificCustomerChosen" prefWidth="150.0" />
       <Label layoutX="549.0" layoutY="14.0" text="Customer:" />
-      <Button layoutX="192.0" layoutY="279.0" mnemonicParsing="false" onAction="#addAppointmentButtonClicked" prefHeight="25.0" prefWidth="121.0" text="Add Appointment" />
-      <Label fx:id="noCustomerSelectedLabel" layoutX="15.0" layoutY="319.0" prefHeight="17.0" prefWidth="347.0" text="No customer selected - please choose a customer and try again." textFill="RED" />
+      <Button layoutX="188.0" layoutY="331.0" mnemonicParsing="false" onAction="#addAppointmentButtonClicked" prefHeight="25.0" prefWidth="121.0" text="Add Appointment" />
+      <Label fx:id="noCustomerSelectedLabel" layoutX="15.0" layoutY="364.0" prefHeight="17.0" prefWidth="347.0" text="No customer selected - please choose a customer and try again." textFill="RED" />
       <Button layoutX="817.0" layoutY="32.0" mnemonicParsing="false" onAction="#clearSelectionsButtonClicked" prefHeight="25.0" prefWidth="121.0" text="Clear Selections" />
+      <Button layoutX="798.0" layoutY="285.0" mnemonicParsing="false" onAction="#deleteAppointmentButtonClicked" prefHeight="25.0" prefWidth="140.0" text="Delete Appointment" />
+      <TextField fx:id="startTextField" layoutX="145.0" layoutY="264.0" prefHeight="25.0" prefWidth="168.0" promptText="yyyy.MM.dd hh:mm:ss" />
+      <TextField fx:id="urlTextField11" layoutX="145.0" layoutY="297.0" prefHeight="25.0" prefWidth="168.0" promptText="yyyy.MM.dd hh:mm:ss" />
+      <Label layoutX="29.0" layoutY="268.0" prefHeight="17.0" prefWidth="105.0" text="Start Date/Time" />
+      <Label layoutX="29.0" layoutY="302.0" prefHeight="17.0" prefWidth="105.0" text="End Date/Time" />
    </children>
 </AnchorPane>

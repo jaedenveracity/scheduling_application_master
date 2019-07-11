@@ -25,6 +25,8 @@ public class AppointmentRecordsController {
     @FXML private TextField contactTextField;
     @FXML private TextField typeTextField;
     @FXML private TextField urlTextField;
+    @FXML private TextField startTextField;
+    @FXML private TextField endTextField;
 
     //Appointment TableView
     @FXML private TableView<Appointment> appointmentTableView;
@@ -50,11 +52,13 @@ public class AppointmentRecordsController {
         String newDescription = descriptionTextField.getText();
         String newLocation = locationTextField.getText();
         String newContact = contactTextField.getText();
+        String newStart = startTextField.getText();
+        String newEnd = endTextField.getText();
         String chosenCustomerName = null;
         int customerId;
         int userId;
 
-        Appointment newAppointment = new Appointment(newTitle, newDescription, newLocation, newContact);
+        Appointment newAppointment = new Appointment(newTitle, newDescription, newLocation, newContact, newStart, newEnd);
 
         //Get customer selected, if none selected throw exception, and retrieve customer Id from Database
         try
@@ -121,6 +125,17 @@ public class AppointmentRecordsController {
         appointmentTableView.setItems(data);
     }
 
+    public void deleteAppointmentButtonClicked (ActionEvent actionEvent)
+    {
+        Appointment toDeleteAppointment = appointmentTableView.getSelectionModel().getSelectedItem();
+        int appointmentId = Database.getAppointmentId(toDeleteAppointment);
+
+        System.out.println("selected appointment to delete: " + toDeleteAppointment + ", with an appointmentId of: " + appointmentId);
+
+        Database.deleteAppointment(appointmentId);
+        data.remove(toDeleteAppointment);
+    }
+
     public void initialize()
     {
         noCustomerSelectedLabel.setVisible(false);
@@ -151,6 +166,8 @@ public class AppointmentRecordsController {
         appointmentContactTableColumn.setCellValueFactory(new PropertyValueFactory<Appointment, String>("appointmentContact"));
         //appointmentTypeTableColumn.setCellValueFactory(new PropertyValueFactory<Appointment, String>("appointmentType"));
         //appointmentUrlTableColumn.setCellValueFactory(new PropertyValueFactory<Appointment, String>("appointmentUrl"));
+        appointmentStartTableColumn.setCellValueFactory(new PropertyValueFactory<Appointment, String>("appointmentStart"));
+        appointmentEndTableColumn.setCellValueFactory(new PropertyValueFactory<Appointment, String>("appointmentEnd"));
 
 
         data = FXCollections.observableArrayList();
@@ -173,6 +190,8 @@ public class AppointmentRecordsController {
                 readableAppointment.setAppointmentContact(appointments.getString("contact"));
                 //readableAppointment.setAppointmentType(appointments.getString("type"));
                 //readableAppointment.setAppointmentType(appointments.getString("url"));
+                readableAppointment.setAppointmentStart(appointments.getString("start"));
+                readableAppointment.setAppointmentEnd(appointments.getString("end"));
 
                 data.add(readableAppointment);
             }
