@@ -2,6 +2,8 @@ package Model;
 
 import View_Controller.Main;
 import Model.Database;
+import javafx.beans.property.SimpleObjectProperty;
+import javafx.beans.property.SimpleStringProperty;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
@@ -15,6 +17,7 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.time.LocalTime;
 
 public class User
 {
@@ -22,6 +25,8 @@ public class User
     private String userName;
     private String password;
     private boolean activeUser;
+
+    private static SimpleStringProperty currentTime = new SimpleStringProperty(LocalTime.now().toString());
 
     public User (){};
 
@@ -108,5 +113,12 @@ public class User
         return foundUser;
     }
 
+    public static String getCurrentTime() {
+        return currentTime.get();
+    }
+
+    public static SimpleStringProperty currentTimeProperty() {
+        return currentTime;
+    }
 }
 

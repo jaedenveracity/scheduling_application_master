@@ -24,8 +24,10 @@ public class MainScreenController {
     private ObservableList<Appointment> warningAppointments = FXCollections.observableArrayList();
 
     @FXML
-    Label currentUserLabel;
-    Button mainExitButton;
+    private Label currentUserLabel;
+    @FXML private Label welcomeLabel;
+    @FXML private Button mainExitButton;
+    @FXML private Label timeLabel;
 
     public static void printActiveUser ()
     {
@@ -37,14 +39,15 @@ public class MainScreenController {
     {
         MainScreenController.printActiveUser();
         currentUserLabel.setText(UserSession.getInstance().getUserName());
+        welcomeLabel.setText(LoginScreenController.getRb().getString("welcome") + ":");
 
         Alert test = new Alert(Alert.AlertType.NONE);
         test.setAlertType(Alert.AlertType.INFORMATION);
 
-
-
         test.setContentText("Warning: There is an appointment scheduled in the next fifteen minutes!");
-        test.show();
+        //test.show();
+
+        timeLabel.setText(User.getCurrentTime());
     }
 
     public void exitButtonClicked (ActionEvent actionEvent)

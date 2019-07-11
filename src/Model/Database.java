@@ -1,6 +1,7 @@
 package Model;
 
 import com.mysql.cj.jdbc.MysqlDataSource;
+import com.mysql.cj.jdbc.exceptions.MysqlDataTruncation;
 import com.mysql.cj.protocol.Resultset;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -63,7 +64,7 @@ public class Database {
         ObservableList<Appointment> customerAppointmentsList = FXCollections.observableArrayList();
 
         conn = Database.checkDataSource().getConnection();
-        ps = conn.prepareStatement("SELECT title, description, location, contact FROM appointment WHERE customerId = ?");
+        ps = conn.prepareStatement("SELECT * FROM appointment WHERE customerId = ?");
         ps.setInt(1, selectedCustomerId);
 
         customerAppointments = ps.executeQuery();
@@ -75,13 +76,21 @@ public class Database {
             String appointmentDescription;
             String appointmentLocation;
             String appointmentContact;
+            String appointmentType;
+            String appointmentUrl;
+            String appointmentStart;
+            String appointmentEnd;
 
             appointmentTitle = customerAppointments.getString("title");
             appointmentDescription = customerAppointments.getString("description");
             appointmentLocation = customerAppointments.getString("location");
             appointmentContact = customerAppointments.getString("contact");
+            appointmentType = customerAppointments.getString("type");
+            appointmentUrl = customerAppointments.getString("url");
+            appointmentStart = customerAppointments.getString("start");
+            appointmentEnd = customerAppointments.getString("end");
 
-            Appointment nextAppointment = new Appointment(appointmentTitle, appointmentDescription, appointmentLocation, appointmentContact);
+            Appointment nextAppointment = new Appointment(appointmentTitle, appointmentDescription, appointmentLocation, appointmentContact, appointmentType, appointmentUrl, appointmentStart, appointmentEnd);
 
             customerAppointmentsList.add(nextAppointment);
 
@@ -128,7 +137,7 @@ public class Database {
 
     }
 
-    public static boolean addAppointment (Appointment newAppointment, String customerSelected)
+    public static boolean addAppointment (Appointment newAppointment, String customerSelected) throws MysqlDataTruncation
     {
         Connection conn = null;
         Statement stmt = null;

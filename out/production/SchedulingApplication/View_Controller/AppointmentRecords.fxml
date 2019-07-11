@@ -6,7 +6,7 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<AnchorPane prefHeight="401.0" prefWidth="997.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="View_Controller.AppointmentRecordsController">
+<AnchorPane prefHeight="401.0" prefWidth="1057.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="View_Controller.AppointmentRecordsController">
    <children>
       <TextField fx:id="titleTextField" layoutX="145.0" layoutY="73.0" prefHeight="25.0" prefWidth="168.0" promptText="Enter appointment title" />
       <TextField fx:id="descriptionTextField" layoutX="145.0" layoutY="104.0" prefHeight="25.0" prefWidth="168.0" promptText="Enter appointment desc" />
@@ -22,16 +22,16 @@
       <Label layoutX="29.0" layoutY="204.0" prefHeight="17.0" prefWidth="105.0" text="Type:" />
       <Label layoutX="29.0" layoutY="237.0" prefHeight="17.0" prefWidth="105.0" text="URL:" />
       <Label layoutX="29.0" layoutY="44.0" prefHeight="17.0" prefWidth="105.0" text="Customer:" />
-      <TableView fx:id="appointmentTableView" layoutX="337.0" layoutY="71.0" prefHeight="205.0" prefWidth="601.0">
+      <TableView fx:id="appointmentTableView" layoutX="337.0" layoutY="71.0" prefHeight="205.0" prefWidth="695.0">
         <columns>
           <TableColumn fx:id="appointmentTitleTableColumn" prefWidth="75.0" text="Title" />
           <TableColumn fx:id="appointmentDescriptionTableColumn" prefWidth="75.0" text="Description" />
             <TableColumn fx:id="appointmentLocationTableColumn" prefWidth="75.0" text="Location" />
             <TableColumn fx:id="appointmentContactTableColumn" prefWidth="75.0" text="Contact" />
-            <TableColumn fx:id="appointmenTypeTableColumn" prefWidth="75.0" text="Type" />
+            <TableColumn fx:id="appointmentTypeTableColumn" prefWidth="75.0" text="Type" />
             <TableColumn fx:id="appointmentUrlTableColumn" prefWidth="75.0" text="URL" />
-            <TableColumn fx:id="appointmentStartTableColumn" prefWidth="75.0" text="Start" />
-            <TableColumn fx:id="appointmentEndTableColumn" prefWidth="75.0" text="End" />
+            <TableColumn fx:id="appointmentStartTableColumn" prefWidth="121.0" text="Start" />
+            <TableColumn fx:id="appointmentEndTableColumn" prefWidth="121.0" text="End" />
         </columns>
       </TableView>
       <RadioButton layoutX="402.0" layoutY="36.0" mnemonicParsing="false" prefHeight="17.0" prefWidth="85.0" text="Week" />
@@ -41,11 +41,12 @@
       <Label layoutX="549.0" layoutY="14.0" text="Customer:" />
       <Button layoutX="188.0" layoutY="331.0" mnemonicParsing="false" onAction="#addAppointmentButtonClicked" prefHeight="25.0" prefWidth="121.0" text="Add Appointment" />
       <Label fx:id="noCustomerSelectedLabel" layoutX="15.0" layoutY="364.0" prefHeight="17.0" prefWidth="347.0" text="No customer selected - please choose a customer and try again." textFill="RED" />
-      <Button layoutX="817.0" layoutY="32.0" mnemonicParsing="false" onAction="#clearSelectionsButtonClicked" prefHeight="25.0" prefWidth="121.0" text="Clear Selections" />
-      <Button layoutX="798.0" layoutY="285.0" mnemonicParsing="false" onAction="#deleteAppointmentButtonClicked" prefHeight="25.0" prefWidth="140.0" text="Delete Appointment" />
+      <Button layoutX="911.0" layoutY="32.0" mnemonicParsing="false" onAction="#clearSelectionsButtonClicked" prefHeight="25.0" prefWidth="121.0" text="Clear Selections" />
+      <Button layoutX="892.0" layoutY="319.0" mnemonicParsing="false" onAction="#deleteAppointmentButtonClicked" prefHeight="25.0" prefWidth="140.0" text="Delete Appointment" />
       <TextField fx:id="startTextField" layoutX="145.0" layoutY="264.0" prefHeight="25.0" prefWidth="168.0" promptText="yyyy.MM.dd hh:mm:ss" />
-      <TextField fx:id="urlTextField11" layoutX="145.0" layoutY="297.0" prefHeight="25.0" prefWidth="168.0" promptText="yyyy.MM.dd hh:mm:ss" />
+      <TextField fx:id="endTextField" layoutX="145.0" layoutY="297.0" prefHeight="25.0" prefWidth="168.0" promptText="yyyy.MM.dd hh:mm:ss" />
       <Label layoutX="29.0" layoutY="268.0" prefHeight="17.0" prefWidth="105.0" text="Start Date/Time" />
       <Label layoutX="29.0" layoutY="302.0" prefHeight="17.0" prefWidth="105.0" text="End Date/Time" />
+      <Button layoutX="892.0" layoutY="285.0" mnemonicParsing="false" onAction="#modifyAppointmentButtonClicked" prefHeight="25.0" prefWidth="140.0" text="Modify Appointment" />
    </children>
 </AnchorPane>

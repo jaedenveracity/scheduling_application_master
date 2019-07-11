@@ -12,7 +12,7 @@ public class Appointment {
     private SimpleStringProperty appointmentLocation;
     private SimpleStringProperty appointmentContact;
     private SimpleStringProperty appointmentType;
-    private SimpleStringProperty appointmentUrl;
+    private SimpleStringProperty url;
     private SimpleStringProperty appointmentStart;
     private SimpleStringProperty appointmentEnd;
 
@@ -26,18 +26,22 @@ public class Appointment {
         this.appointmentDescription = new SimpleStringProperty();
         this.appointmentLocation = new SimpleStringProperty();
         this.appointmentContact = new SimpleStringProperty();
-        //this.appointmentType = new SimpleStringProperty();
-        //this.appointmentUrl = new SimpleStringProperty();
+        this.appointmentType = new SimpleStringProperty();
+        this.url = new SimpleStringProperty();
         this.appointmentStart = new SimpleStringProperty();
         this.appointmentEnd = new SimpleStringProperty();
     }
 
-    public Appointment (String newTitle, String newDescription, String newLocation, String newContact, String newStart, String newEnd)
+    public Appointment (String newTitle, String newDescription, String newLocation, String newContact, String newType, String newUrl, String newStart, String newEnd)
     {
         this.appointmentTitle = new SimpleStringProperty(newTitle);
         this.appointmentDescription = new SimpleStringProperty(newDescription);
         this.appointmentLocation = new SimpleStringProperty(newLocation);
         this.appointmentContact = new SimpleStringProperty(newContact);
+        this.appointmentType = new SimpleStringProperty(newType);
+        this.url = new SimpleStringProperty(newUrl);
+        this.appointmentStart = new SimpleStringProperty(newStart);
+        this.appointmentEnd = new SimpleStringProperty(newEnd);
     }
 
     public Appointment (String newTitle, String newDescription, String newLocation, String newContact)
@@ -121,18 +125,6 @@ public class Appointment {
         this.appointmentType.set(appointmentType);
     }
 
-    public String getAppointmentUrl() {
-        return appointmentUrl.get();
-    }
-
-    public SimpleStringProperty appointmentUrlProperty() {
-        return appointmentUrl;
-    }
-
-    public void setAppointmentUrl(String appointmentUrl) {
-        this.appointmentUrl.set(appointmentUrl);
-    }
-
     public String getAppointmentStart() {
         return appointmentStart.get();
     }
@@ -155,6 +147,18 @@ public class Appointment {
 
     public SimpleStringProperty appointmentEndProperty() {
         return appointmentEnd;
+    }
+
+    public String getUrl() {
+        return url.get();
+    }
+
+    public SimpleStringProperty urlProperty() {
+        return url;
+    }
+
+    public void setUrl(String url) {
+        this.url.set(url);
     }
 }
 
