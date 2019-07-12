@@ -1,6 +1,7 @@
 package View_Controller;
 
 import Model.Appointment;
+import Model.Database;
 import Model.User;
 import Model.UserSession;
 import javafx.application.Platform;
@@ -18,6 +19,12 @@ import javafx.scene.control.Label;
 import javafx.stage.Stage;
 
 import java.io.IOException;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.util.ArrayList;
+import java.util.List;
 
 public class MainScreenController {
 
@@ -37,12 +44,64 @@ public class MainScreenController {
     @FXML
     public void initialize()
     {
+        List<Appointment> listAppointments = new ArrayList<>();
+        System.out.println(LocalTime.now());
+        String appointmentStartTime = null;
+
         MainScreenController.printActiveUser();
         currentUserLabel.setText(UserSession.getInstance().getUserName());
         welcomeLabel.setText(LoginScreenController.getRb().getString("welcome") + ":");
 
+
+
         Alert test = new Alert(Alert.AlertType.NONE);
         test.setAlertType(Alert.AlertType.INFORMATION);
+
+        try {
+            ResultSet appointments = Database.getAllAppointments();
+
+            while (appointments.next())
+            {
+
+                Appointment readableAppointment = new Appointment();
+
+                readableAppointment.setAppointmentTitle(appointments.getString("title"));
+                readableAppointment.setAppointmentDescription(appointments.getString("description"));
+                readableAppointment.setAppointmentLocation(appointments.getString("location"));
+                readableAppointment.setAppointmentContact(appointments.getString("contact"));
+                readableAppointment.setAppointmentType(appointments.getString("type"));
+                readableAppointment.setUrl(appointments.getString("url"));
+                readableAppointment.setAppointmentStart(appointments.getString("start"));
+                readableAppointment.setAppointmentEnd(appointments.getString("end"));
+
+                String[] dateTimeSplitStart = readableAppointment.getAppointmentStart().split(" ");
+
+                for (String x : dateTimeSplitStart)
+                {
+                    System.out.println(x);
+
+                    appointmentStartTime = dateTimeSplitStart[1];
+
+                    //split again for hours minutes seconds
+
+                    //Check time vs current localtime
+                }
+
+
+
+                listAppointments.add(readableAppointment);
+            }
+
+
+        }
+        catch (SQLException e)
+        {
+            System.out.println("Unable to retrieve appointments from database to check for appointments in the next fifteen minutes");
+        }
+
+
+
+
 
         test.setContentText("Warning: There is an appointment scheduled in the next fifteen minutes!");
         //test.show();

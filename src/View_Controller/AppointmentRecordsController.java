@@ -9,9 +9,16 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.fxml.Initializable;
+import javafx.scene.Node;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.stage.Stage;
 
+import java.io.IOException;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
@@ -41,6 +48,7 @@ public class AppointmentRecordsController {
     @FXML private TableColumn<Appointment, String> appointmentEndTableColumn;
 
     @FXML private Label noCustomerSelectedLabel;
+    @FXML private Label modifyAppointmentErrorLabel;
 
     //To hold customer data retrieved from SQL
     private ObservableList<Appointment> data;
@@ -143,6 +151,47 @@ public class AppointmentRecordsController {
         appointmentTableView.setItems(data);
     }
 
+    public void modifyAppointmentButtonClicked (ActionEvent actionEvent)
+    {
+        try {
+            Appointment.setModifiableAppointment(appointmentTableView.getSelectionModel().getSelectedItem());
+
+            System.out.println("Modifiable appointment set as: " + Appointment.getModifiableAppointment());
+
+            if (Appointment.getModifiableAppointment() == null) {
+                throw new IllegalArgumentException();
+            }
+            else
+            {
+                modifyAppointmentErrorLabel.setVisible(false);
+
+                try
+                {
+                    Parent modifyAppointmentSceneParent = FXMLLoader.load(getClass().getResource("AppointmentModification.fxml"));
+                    Scene modifyAppointmentScene = new Scene(modifyAppointmentSceneParent);
+
+                    //This line gets the Stage information
+                    Stage window = (Stage) ((Node) actionEvent.getSource()).getScene().getWindow();
+
+                    window.setScene(modifyAppointmentScene);
+                    window.show();
+                }
+                catch (IOException e)
+                {
+                    e.printStackTrace();
+                }
+            }
+        }
+        catch (IllegalArgumentException e)
+        {
+            modifyAppointmentErrorLabel.setVisible(true);
+
+        }
+
+
+
+    }
+
     public void deleteAppointmentButtonClicked (ActionEvent actionEvent)
     {
         Appointment toDeleteAppointment = appointmentTableView.getSelectionModel().getSelectedItem();
@@ -157,6 +206,7 @@ public class AppointmentRecordsController {
     public void initialize()
     {
         noCustomerSelectedLabel.setVisible(false);
+        modifyAppointmentErrorLabel.setVisible(false);
 
         try {
             ResultSet customers = Database.getAllCustomers();

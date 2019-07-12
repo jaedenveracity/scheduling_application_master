@@ -48,5 +48,6 @@
       <Label layoutX="29.0" layoutY="268.0" prefHeight="17.0" prefWidth="105.0" text="Start Date/Time" />
       <Label layoutX="29.0" layoutY="302.0" prefHeight="17.0" prefWidth="105.0" text="End Date/Time" />
       <Button layoutX="892.0" layoutY="285.0" mnemonicParsing="false" onAction="#modifyAppointmentButtonClicked" prefHeight="25.0" prefWidth="140.0" text="Modify Appointment" />
+      <Label fx:id="modifyAppointmentErrorLabel" layoutX="645.0" layoutY="364.0" prefHeight="17.0" prefWidth="387.0" text="No appointment selected - please choose an appointment and try again." textFill="RED" />
    </children>
 </AnchorPane>

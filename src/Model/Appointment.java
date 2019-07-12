@@ -17,6 +17,7 @@ public class Appointment {
     private SimpleStringProperty appointmentEnd;
 
     static private ObservableList<Appointment> allAppointments = FXCollections.observableArrayList();
+    static private Appointment modifiableAppointment = null;
 
     //Must instantiate the property objects before using - as they are not primitive and the objects must be created that encapsulate the primitive strings and have listeners built in
     public Appointment ()
@@ -50,6 +51,14 @@ public class Appointment {
         this.appointmentDescription = new SimpleStringProperty(newDescription);
         this.appointmentLocation = new SimpleStringProperty(newLocation);
         this.appointmentContact = new SimpleStringProperty(newContact);
+    }
+
+    public static Appointment getModifiableAppointment() {
+        return modifiableAppointment;
+    }
+
+    public static void setModifiableAppointment(Appointment modifiableAppointment) {
+        Appointment.modifiableAppointment = modifiableAppointment;
     }
 
     public static void addAppointment(Appointment newAppointment)

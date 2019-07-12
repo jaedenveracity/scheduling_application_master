@@ -183,6 +183,43 @@ public class Database {
         }
     }
 
+    public static int updateAppointment (Appointment updatableAppointment, int appointmentId, int userId, int customerId)
+    {
+        Connection conn = null;
+        PreparedStatement prepStmt = null;
+        ResultSet rs = null;
+        int result = 0;
+
+        try {
+
+            conn = Database.checkDataSource().getConnection();
+            prepStmt = conn.prepareStatement("UPDATE appointment SET customerId = ?, userId = ? WHERE appointmentId = ?");
+            prepStmt.setInt(1, customerId);
+            prepStmt.setInt(2, userId);
+            prepStmt.setInt(3, appointmentId);
+            result = prepStmt.executeUpdate();
+
+            prepStmt = conn.prepareStatement("UPDATE appointment SET title = ?, description = ?, location = ?, contact = ?, type = ?, url = ?, start = ?, end = ? WHERE appointmentId = ?");
+            prepStmt.setString(1, updatableAppointment.getAppointmentTitle());
+            prepStmt.setString(2, updatableAppointment.getAppointmentDescription());
+            prepStmt.setString(3, updatableAppointment.getAppointmentLocation());
+            prepStmt.setString(4, updatableAppointment.getAppointmentContact());
+            prepStmt.setString(5, updatableAppointment.getAppointmentType());
+            prepStmt.setString(6, updatableAppointment.getUrl());
+            prepStmt.setString(7, updatableAppointment.getAppointmentStart());
+            prepStmt.setString(8, updatableAppointment.getAppointmentEnd());
+            prepStmt.setInt(9, appointmentId);
+            result = prepStmt.executeUpdate();
+
+        }
+        catch (SQLException e)
+        {
+            e.printStackTrace();
+        }
+
+        return 0;
+    }
+
     public static int deleteAppointment (int appointmentId)
     {
         Connection conn = null;
@@ -239,6 +276,56 @@ public class Database {
         }
 
         return appointmentId;
+    }
+
+    public static String getCustomerFromAppointmentId (int checkedAppointmentId)
+    {
+        Connection conn = null;
+        PreparedStatement prepStmt = null;
+        ResultSet rs = null;
+        int customerId = 0;
+        String returnedCustomerName = null;
+
+        try {
+
+            conn = Database.checkDataSource().getConnection();
+            prepStmt = conn.prepareStatement("SELECT customerId FROM appointment WHERE appointmentId = ?");
+            prepStmt.setInt(1, checkedAppointmentId);
+            rs = prepStmt.executeQuery();
+
+            while (rs.next())
+            {
+                customerId = rs.getInt("customerId");
+            }
+
+            if (customerId == 0)
+            {
+                throw new Exception("customerId was not found in the database");
+            }
+
+            prepStmt = conn.prepareStatement("SELECT customerName FROM customer where customerId = ?");
+            prepStmt.setInt(1, customerId);
+            rs = prepStmt.executeQuery();
+
+            while (rs.next())
+            {
+                return rs.getString("customerName");
+            }
+
+
+
+        }
+        catch (SQLException e)
+        {
+            e.printStackTrace();
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
+        }
+
+        return returnedCustomerName;
+
     }
 
     public static boolean addCustomer (Customer newCustomer)//, String userPhone, String userAddress, String userCity, String userPostal, String userCountry)
