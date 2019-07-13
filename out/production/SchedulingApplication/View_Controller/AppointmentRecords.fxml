@@ -1,12 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.scene.text.*?>
 <?import java.lang.*?>
 <?import java.util.*?>
 <?import javafx.scene.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<AnchorPane prefHeight="401.0" prefWidth="1057.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="View_Controller.AppointmentRecordsController">
+<AnchorPane prefHeight="400.0" prefWidth="1057.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="View_Controller.AppointmentRecordsController">
    <children>
       <TextField fx:id="titleTextField" layoutX="145.0" layoutY="73.0" prefHeight="25.0" prefWidth="168.0" promptText="Enter appointment title" />
       <TextField fx:id="descriptionTextField" layoutX="145.0" layoutY="104.0" prefHeight="25.0" prefWidth="168.0" promptText="Enter appointment desc" />
@@ -37,10 +38,10 @@
       <RadioButton layoutX="402.0" layoutY="36.0" mnemonicParsing="false" prefHeight="17.0" prefWidth="85.0" text="Week" />
       <RadioButton layoutX="464.0" layoutY="36.0" mnemonicParsing="false" prefHeight="17.0" prefWidth="85.0" text="Month" />
       <Label layoutX="29.0" layoutY="77.0" prefHeight="17.0" prefWidth="105.0" text="Title:" />
-      <ComboBox fx:id="customerComboBoxSelector" layoutX="549.0" layoutY="32.0" onAction="#specificCustomerChosen" prefWidth="150.0" />
-      <Label layoutX="549.0" layoutY="14.0" text="Customer:" />
+      <ComboBox fx:id="customerComboBoxSelector" layoutX="685.0" layoutY="32.0" onAction="#specificCustomerChosen" prefWidth="150.0" />
+      <Label layoutX="618.0" layoutY="36.0" text="Customer:" />
       <Button layoutX="188.0" layoutY="331.0" mnemonicParsing="false" onAction="#addAppointmentButtonClicked" prefHeight="25.0" prefWidth="121.0" text="Add Appointment" />
-      <Label fx:id="noCustomerSelectedLabel" layoutX="15.0" layoutY="364.0" prefHeight="17.0" prefWidth="347.0" text="No customer selected - please choose a customer and try again." textFill="RED" />
+      <Label fx:id="noCustomerSelectedLabel" layoutX="665.0" layoutY="348.0" prefHeight="17.0" prefWidth="347.0" text="No customer selected - please choose a customer and try again." textFill="RED" />
       <Button layoutX="911.0" layoutY="32.0" mnemonicParsing="false" onAction="#clearSelectionsButtonClicked" prefHeight="25.0" prefWidth="121.0" text="Clear Selections" />
       <Button layoutX="892.0" layoutY="319.0" mnemonicParsing="false" onAction="#deleteAppointmentButtonClicked" prefHeight="25.0" prefWidth="140.0" text="Delete Appointment" />
       <TextField fx:id="startTextField" layoutX="145.0" layoutY="264.0" prefHeight="25.0" prefWidth="168.0" promptText="yyyy.MM.dd hh:mm:ss" />
@@ -49,5 +50,16 @@
       <Label layoutX="29.0" layoutY="302.0" prefHeight="17.0" prefWidth="105.0" text="End Date/Time" />
       <Button layoutX="892.0" layoutY="285.0" mnemonicParsing="false" onAction="#modifyAppointmentButtonClicked" prefHeight="25.0" prefWidth="140.0" text="Modify Appointment" />
       <Label fx:id="modifyAppointmentErrorLabel" layoutX="645.0" layoutY="364.0" prefHeight="17.0" prefWidth="387.0" text="No appointment selected - please choose an appointment and try again." textFill="RED" />
+      <Button layoutX="14.0" layoutY="360.0" mnemonicParsing="false" onAction="#mainPageButtonClicked" prefHeight="0.0" prefWidth="150.0" text="Back to Main Page" />
+      <Label layoutX="89.0" layoutY="3.0" prefHeight="22.0" prefWidth="140.0" text="Add Appointment">
+         <font>
+            <Font name="Arial Black" size="14.0" />
+         </font>
+      </Label>
+      <Label layoutX="563.0" layoutY="3.0" prefHeight="22.0" prefWidth="212.0" text="Delete/Modify Appointment">
+         <font>
+            <Font name="Arial Black" size="14.0" />
+         </font>
+      </Label>
    </children>
 </AnchorPane>

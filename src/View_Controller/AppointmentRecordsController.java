@@ -55,6 +55,26 @@ public class AppointmentRecordsController {
 
     private ObservableList<Appointment> chosenCustomerData;
 
+    public void mainPageButtonClicked (ActionEvent actionEvent)
+    {
+        //Load main screen
+        try {
+            Parent mainScreenButtonParent = FXMLLoader.load(getClass().getResource("MainScreen.fxml"));
+
+            Scene mainScreenScene = new Scene(mainScreenButtonParent);
+
+            //This line gets the Stage information
+            Stage window = (Stage) ((Node) actionEvent.getSource()).getScene().getWindow();
+
+            window.setScene(mainScreenScene);
+            window.show();
+        }
+        catch (IOException e)
+        {
+            e.printStackTrace();
+        }
+    }
+
     public void addAppointmentButtonClicked (ActionEvent actionEvent)
     {
         String newTitle = titleTextField.getText();

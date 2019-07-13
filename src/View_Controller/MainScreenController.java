@@ -21,9 +21,15 @@ import javafx.stage.Stage;
 import java.io.IOException;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 public class MainScreenController {
@@ -47,15 +53,28 @@ public class MainScreenController {
         List<Appointment> listAppointments = new ArrayList<>();
         System.out.println(LocalTime.now());
         String appointmentStartTime = null;
+        boolean appointmentFifteenMinutes = false;
+        StringBuilder nextFifteenAppointmentTimes = new StringBuilder();
+
+        DateTimeFormatter df = DateTimeFormatter.ofPattern("hh:mm");
+        LocalTime time;
+        LocalTime currentTime;
+
+        String timeString;
+        String currentTimeString;
+
+        String dateString;
+        String currentDateString;
+
+        currentTime = LocalTime.parse(LocalTime.now().format(DateTimeFormatter.ofPattern("HH:mm")));
+        currentTimeString = LocalTime.now().format(DateTimeFormatter.ofPattern("HH:mm"));
+        System.out.println("Current local time is: " +  currentTime);
+
+        currentDateString = LocalDate.now().toString();
 
         MainScreenController.printActiveUser();
         currentUserLabel.setText(UserSession.getInstance().getUserName());
         welcomeLabel.setText(LoginScreenController.getRb().getString("welcome") + ":");
-
-
-
-        Alert test = new Alert(Alert.AlertType.NONE);
-        test.setAlertType(Alert.AlertType.INFORMATION);
 
         try {
             ResultSet appointments = Database.getAllAppointments();
@@ -76,20 +95,45 @@ public class MainScreenController {
 
                 String[] dateTimeSplitStart = readableAppointment.getAppointmentStart().split(" ");
 
-                for (String x : dateTimeSplitStart)
-                {
-                    System.out.println(x);
+                dateString = dateTimeSplitStart[0];
 
-                    appointmentStartTime = dateTimeSplitStart[1];
+                System.out.println(dateTimeSplitStart[1]);
+                time = LocalTime.parse(dateTimeSplitStart[1]);
 
-                    //split again for hours minutes seconds
+                timeString = dateTimeSplitStart[1];
 
-                    //Check time vs current localtime
+                System.out.println("Current time for appointment is: " + time);
+
+               //Get hours and seconds from both current time and appointment and compare
+                String[] currentTimeSplit = currentTimeString.split(":");
+                String[] appointmentTimeSplit = timeString.split(":");
+
+                int curHour = Integer.parseInt(currentTimeSplit[0]);
+                int curMinute = Integer.parseInt(currentTimeSplit[1]);
+
+                int apptHour = Integer.parseInt(appointmentTimeSplit[0]);
+                int apptMinute = Integer.parseInt(appointmentTimeSplit[1]);
+
+                //Using LocalTime objects - checking fifteen minutes
+
+                if(currentDateString.equals(dateString)) {
+
+                    System.out.println("Current Date matches an appointment date in our database. We have appointments today!");
+
+                    currentTime = currentTime.minusSeconds(1);
+
+                    if (time.isAfter(currentTime)) {
+
+                        currentTime.plusSeconds(1);
+                        LocalTime currentTimePlusFifteen = currentTime.plusMinutes(15);
+                        currentTimePlusFifteen.plusSeconds(1);
+
+                        if (time.isBefore(currentTimePlusFifteen)) ;
+                        System.out.println("Appointment time is within the next fifteen minutes!");
+                        nextFifteenAppointmentTimes.append(timeString);
+                        nextFifteenAppointmentTimes.append(" ");
+                    }
                 }
-
-
-
-                listAppointments.add(readableAppointment);
             }
 
 
@@ -99,12 +143,16 @@ public class MainScreenController {
             System.out.println("Unable to retrieve appointments from database to check for appointments in the next fifteen minutes");
         }
 
+        if (nextFifteenAppointmentTimes.length() != 0) {
 
+            Alert test = new Alert(Alert.AlertType.NONE);
+            test.setAlertType(Alert.AlertType.INFORMATION);
 
+            test.setHeaderText("Warning!");
+            test.setContentText("Warning: There are appointments in the next fifteen minutes starting at these times: " + nextFifteenAppointmentTimes);
+            test.show();
 
-
-        test.setContentText("Warning: There is an appointment scheduled in the next fifteen minutes!");
-        //test.show();
+        }
 
         timeLabel.setText(User.getCurrentTime());
     }

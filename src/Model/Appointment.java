@@ -5,6 +5,12 @@ import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
+
 public class Appointment {
 
     private SimpleStringProperty appointmentTitle;
@@ -72,6 +78,36 @@ public class Appointment {
 
     public static void setAllAppointments(ObservableList<Appointment> allAppointments) {
         Appointment.allAppointments = allAppointments;
+    }
+
+    public static void checkAppointmentConflicts (Appointment newAppointment)
+    {
+
+        String newApptStart = newAppointment.getAppointmentStart();
+        String newApptEnd = newAppointment.getAppointmentEnd();
+
+        String[] newApptStartSplit = newApptStart.split(" ");
+
+        String newApptStartDate = newApptStartSplit[0];
+        String newApptStartTime = newApptStartSplit[1];
+
+
+
+        try {
+            ResultSet appointments = Database.getAllAppointments();
+
+            while (appointments.next())
+            {
+
+
+            }
+        }
+        catch(SQLException e)
+        {
+            System.out.println("Could not retrieve all appointments from database");
+        }
+
+
     }
 
     public String getAppointmentTitle() {

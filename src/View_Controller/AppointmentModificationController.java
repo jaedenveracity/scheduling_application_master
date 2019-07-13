@@ -93,6 +93,23 @@ public class AppointmentModificationController {
 
         Database.updateAppointment(updatableAppointment, appointmentId, userId, customerId);
 
+        Customer.getCustomerNames().clear();
+        try
+        {
+            Parent modifyAppointmentSceneParent = FXMLLoader.load(getClass().getResource("AppointmentRecords.fxml"));
+            Scene modifyAppointmentScene = new Scene(modifyAppointmentSceneParent);
+
+            //This line gets the Stage information
+            Stage window = (Stage) ((Node) actionEvent.getSource()).getScene().getWindow();
+
+            window.setScene(modifyAppointmentScene);
+            window.show();
+        }
+        catch (IOException e)
+        {
+            e.printStackTrace();
+        }
+
     }
 
     public void cancelAppointmentButtonClicked (ActionEvent actionEvent)

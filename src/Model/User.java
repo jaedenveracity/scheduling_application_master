@@ -93,7 +93,7 @@ public class User
                 }
 
                 else {
-                    throw new Exception();
+                    throw new InvalidLoginCredentialsException();
                 }
             }
 
@@ -102,9 +102,9 @@ public class User
         {
             e.printStackTrace();
         }
-        catch (Exception e)
+        catch (InvalidLoginCredentialsException e)
         {
-            System.out.println("Username not found, please try again.");
+            e.printStackTrace();
         }
 
         //Close Resources
@@ -120,5 +120,14 @@ public class User
     public static SimpleStringProperty currentTimeProperty() {
         return currentTime;
     }
+}
+
+class InvalidLoginCredentialsException extends Exception
+{
+    InvalidLoginCredentialsException()
+    {
+        System.out.println("The username and/or password was incorrect.");
+    }
+
 }
 
