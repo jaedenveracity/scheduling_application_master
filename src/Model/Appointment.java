@@ -80,8 +80,10 @@ public class Appointment {
         Appointment.allAppointments = allAppointments;
     }
 
-    public static void checkAppointmentConflicts (Appointment newAppointment)
+    public static void checkAppointmentConflicts (Appointment newAppointment) throws OverlappingAppointmentException
     {
+        String checkedAppointmentStart;
+        String checkedAppointmentEnd;
 
         String newApptStart = newAppointment.getAppointmentStart();
         String newApptEnd = newAppointment.getAppointmentEnd();
@@ -91,14 +93,41 @@ public class Appointment {
         String newApptStartDate = newApptStartSplit[0];
         String newApptStartTime = newApptStartSplit[1];
 
+        String[] newApptEndSplit = newApptEnd.split(" ");
 
+        String newApptEndDate = newApptEndSplit[0];
+        String newApptEndTime = newApptEndSplit[1];
 
         try {
             ResultSet appointments = Database.getAllAppointments();
 
             while (appointments.next())
             {
+                checkedAppointmentStart = appointments.getString("start");
+                checkedAppointmentEnd = appointments.getString("end");
 
+                String[] checkedAppointmentStartSplit = checkedAppointmentStart.split(" ");
+
+                String checkedStartAppointmentDate = checkedAppointmentStartSplit[0];
+                String checkedStartAppointmentTime = checkedAppointmentStartSplit[1];
+
+                String[] checkedAppointmentEndSplit = checkedAppointmentEnd.split(" ");
+
+                String checkedEndAppointmentDate = checkedAppointmentEndSplit[0];
+                String checkedEndAppointmentTime = checkedAppointmentEndSplit[1];
+
+                if (newApptStartDate == checkedStartAppointmentDate && newApptEndDate == checkedEndAppointmentDate)
+                {
+                    String[] newApptStartTimeSplit = newApptStartTime.split(":");
+                    String[] newApptEndTimeSplit = newApptEndTime.split(":");
+                    String[] checkedStartAppointmentTimeSplit = checkedStartAppointmentTime.split(":");
+                    String[] checkedEndAppointmentTimeSplit = checkedEndAppointmentTime.split(":");
+
+                    if (Integer.parseInt(newApptStartTimeSplit[0]) >= Integer.parseInt(checkedStartAppointmentTimeSplit[0]) && Integer.parseInt(newApptStartTimeSplit[0]) <= Integer.parseInt(checkedEndAppointmentTimeSplit[0]))
+                    {
+                        throw new OverlappingAppointmentException();
+                    }
+                }
 
             }
         }

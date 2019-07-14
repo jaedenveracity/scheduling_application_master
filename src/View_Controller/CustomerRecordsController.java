@@ -9,6 +9,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
@@ -38,6 +39,8 @@ public class CustomerRecordsController {
     @FXML private TableColumn<Customer, String> customerCityTableColumn;
     @FXML private TableColumn<Customer, String> customerPostalTableColumn;
     @FXML private TableColumn<Customer, String> customerCountryTableColumn;
+
+    @FXML private Label invalidCustomerDataLabel;
 
     //To hold customer data retrieved from SQL
     private ObservableList<Customer> data;
@@ -71,38 +74,53 @@ public class CustomerRecordsController {
         String newUserPostal = customerPostalTextField.getText();
         String newUserCountry = customerCountryTextField.getText();
 
-        int cityId;
-        int addressId;
-        int countryId;
+            try {
+                if (newUserName.isEmpty() || newUserAddress.isEmpty() || newUserPhone.isEmpty() || newUserCity.isEmpty() || newUserPostal.isEmpty() || newUserCountry.isEmpty()) {
+                    invalidCustomerDataLabel.setVisible(true);
+                    throw new Exception();
+                }
 
 
-        //Create city first add to database, find that city's id and set the address fk to that, then create address next and add to database, find that addresses id and set the customer fk to that
+                int cityId;
+                int addressId;
+                int countryId;
 
-        Country newCountry = new Country(newUserCountry);
 
-        countryId = Database.getCountryId(newCountry);
+                //Create city first add to database, find that city's id and set the address fk to that, then create address next and add to database, find that addresses id and set the customer fk to that
 
-        City newCity = new City(newUserCity);
+                Country newCountry = new Country(newUserCountry);
 
-        cityId = Database.getCityId(newCity);
+                countryId = Database.getCountryId(newCountry);
 
-        Address newAddress = new Address(newUserAddress, newUserPostal, newUserPhone, cityId);
+                City newCity = new City(newUserCity);
 
-        addressId = Database.getAddressId(newAddress);
+                cityId = Database.getCityId(newCity);
 
-        Customer newCustomer = new Customer(newUserName, newCountry, newCity, newAddress, addressId);
+                Address newAddress = new Address(newUserAddress, newUserPostal, newUserPhone, cityId);
 
-        Database.addCustomer(newCustomer);
-        data.add(newCustomer);
+                addressId = Database.getAddressId(newAddress);
 
-        customerTableView.refresh();
+                Customer newCustomer = new Customer(newUserName, newCountry, newCity, newAddress, addressId);
 
-        customerNameTextField.clear();
-        customerAddressTextField.clear();
-        customerPhoneTextField.clear();
-        customerCityTextField.clear();
-        customerPostalTextField.clear();
-        customerCountryTextField.clear();
+                Database.addCustomer(newCustomer);
+                data.add(newCustomer);
+
+                customerTableView.refresh();
+
+                customerNameTextField.clear();
+                customerAddressTextField.clear();
+                customerPhoneTextField.clear();
+                customerCityTextField.clear();
+                customerPostalTextField.clear();
+                customerCountryTextField.clear();
+
+                invalidCustomerDataLabel.setVisible(false);
+
+            }
+            catch(Exception e)
+            {
+                System.out.println("One or more fields are empty - please enter all fields and try again");
+            }
 
     }
 
@@ -156,6 +174,8 @@ public class CustomerRecordsController {
         customerPostalTableColumn.setCellValueFactory(new PropertyValueFactory<Customer, String>("postalCode"));
         customerCountryTableColumn.setCellValueFactory(new PropertyValueFactory<Customer, String>("country"));
 
+        invalidCustomerDataLabel.setVisible(false);
+
         data = FXCollections.observableArrayList();
 
         try {
@@ -204,5 +224,7 @@ public class CustomerRecordsController {
 
     }
 }
+
+
 
 

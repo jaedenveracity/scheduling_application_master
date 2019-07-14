@@ -45,5 +45,6 @@
       <Label layoutX="23.0" layoutY="225.0" prefHeight="22.0" prefWidth="107.0" text="Country" />
       <Button layoutX="608.0" layoutY="265.0" mnemonicParsing="false" onAction="#modifyCustomerButtonClicked" prefHeight="25.0" prefWidth="127.0" text="Modify Customer" />
       <Button layoutX="14.0" layoutY="265.0" mnemonicParsing="false" onAction="#mainPageButtonClicked" prefHeight="25.0" prefWidth="93.0" text="Main Page" />
+      <Label fx:id="invalidCustomerDataLabel" layoutX="23.0" layoutY="36.0" prefHeight="17.0" prefWidth="413.0" text="One or more customer fields are empty. Please enter all fields &amp; try again." textFill="RED" />
    </children>
 </AnchorPane>

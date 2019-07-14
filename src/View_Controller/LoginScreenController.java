@@ -135,11 +135,12 @@ public class LoginScreenController {
 
             loginIssueLabel.setText(rb.getString("emptyUserPass"));
             loginIssueLabel.setVisible(true);
+            System.out.println("One or more fields for login were not entered. Please enter a username and password to login.");
             e.printStackTrace();
         }
         catch (IOException e)
         {
-            System.out.println("Unable to append to a file, the user login attempt");
+            System.out.println("Unable to append to a file the user login attempt");
             e.printStackTrace();
         }
         finally {

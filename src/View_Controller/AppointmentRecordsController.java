@@ -1,9 +1,6 @@
 package View_Controller;
 
-import Model.Appointment;
-import Model.Customer;
-import Model.Database;
-import Model.UserSession;
+import Model.*;
 import com.mysql.cj.jdbc.exceptions.MysqlDataTruncation;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -90,6 +87,17 @@ public class AppointmentRecordsController {
         int userId;
         boolean appointmentInDatabase;
 
+        String[] startAppointmentSplit = newStart.split(" ");
+
+        String[] startAppointmentTimeSplit = startAppointmentSplit[1].split(":");
+
+        if (Integer.parseInt(startAppointmentTimeSplit[0]) >= 17)
+        {
+            System.out.println("Start time is outside of business hours - our organization closes at 17:00 (5:00 PM)");
+            throw new IllegalArgumentException("Cannot create a meeting outside of business hours");
+        }
+
+
         Appointment newAppointment = new Appointment(newTitle, newDescription, newLocation, newContact, newType, newUrl, newStart, newEnd);
 
         System.out.println("New appointment was created successfully with title: " + newTitle);
@@ -99,6 +107,9 @@ public class AppointmentRecordsController {
         //Get customer selected, if none selected throw exception, and retrieve customer Id from Database
         try
         {
+
+            Appointment.checkAppointmentConflicts(newAppointment);
+
             chosenCustomerName = customerComboBox.getSelectionModel().getSelectedItem();
 
             System.out.println("The customer for the new appointment is: " + chosenCustomerName);
@@ -127,6 +138,9 @@ public class AppointmentRecordsController {
                 }
             }
         }
+        catch (OverlappingAppointmentException e) {
+            System.out.println("Appointment conflicts with an existing - please try again.");
+        }
         catch (IllegalArgumentException e){
             e.printStackTrace();
             }
@@ -138,6 +152,7 @@ public class AppointmentRecordsController {
         {
             System.out.println("Date/Times were not inputted in correct format.");
         }
+
 
     }
 
