@@ -82,14 +82,21 @@ public class Appointment {
 
     public static void checkAppointmentConflicts (Appointment newAppointment) throws OverlappingAppointmentException
     {
+        //checked set to each appointment in MySQL database - vs. newAppointment pulled from front end
         String checkedAppointmentStart;
         String checkedAppointmentEnd;
 
+        //Get appointment start and end dates and times
         String newApptStart = newAppointment.getAppointmentStart();
-        String newApptEnd = newAppointment.getAppointmentEnd();
+        System.out.println("The new appointment start date/time is: " + newApptStart);
 
+        String newApptEnd = newAppointment.getAppointmentEnd();
+        System.out.println("The new appointment end date/time is: " + newApptEnd);
+
+        //Split each date/time to get date & time separately
         String[] newApptStartSplit = newApptStart.split(" ");
 
+        //Date is index zero, time is index one
         String newApptStartDate = newApptStartSplit[0];
         String newApptStartTime = newApptStartSplit[1];
 
@@ -116,8 +123,16 @@ public class Appointment {
                 String checkedEndAppointmentDate = checkedAppointmentEndSplit[0];
                 String checkedEndAppointmentTime = checkedAppointmentEndSplit[1];
 
-                if (newApptStartDate == checkedStartAppointmentDate && newApptEndDate == checkedEndAppointmentDate)
+                System.out.println("New Appt start date: " + newApptStartDate);
+                System.out.println("Database Appt checked start date: " + checkedStartAppointmentDate);
+                System.out.println("New Appt end date: " + newApptEndDate);
+                System.out.println("Database Appt checked end date: " + checkedEndAppointmentDate);
+
+                //Verify if the dates are the same
+                if (newApptStartDate.equals(checkedStartAppointmentDate) && newApptEndDate.equals(checkedEndAppointmentDate))
                 {
+                    System.out.println("A date in the database matches with the new appointment!");
+
                     String[] newApptStartTimeSplit = newApptStartTime.split(":");
                     String[] newApptEndTimeSplit = newApptEndTime.split(":");
                     String[] checkedStartAppointmentTimeSplit = checkedStartAppointmentTime.split(":");
@@ -235,5 +250,6 @@ public class Appointment {
         this.url.set(url);
     }
 }
+
 
 

@@ -18,11 +18,15 @@ import javafx.stage.Stage;
 import java.io.IOException;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 
 public class AppointmentRecordsController {
 
     @FXML private ComboBox<String> customerComboBox = new ComboBox<>();
     @FXML private ComboBox<String> customerComboBoxSelector = new ComboBox<>();
+    @FXML private ComboBox<String> monthComboBoxSelector = new ComboBox<>();
+    @FXML private ComboBox<String> weekComboBoxSelector = new ComboBox<>();
 
     @FXML private TextField titleTextField;
     @FXML private TextField descriptionTextField;
@@ -51,6 +55,8 @@ public class AppointmentRecordsController {
     private ObservableList<Appointment> data;
 
     private ObservableList<Appointment> chosenCustomerData;
+    private ObservableList<Appointment> chosenMonthData;
+    private ObservableList<Appointment> chosenWeekData;
 
     public void mainPageButtonClicked (ActionEvent actionEvent)
     {
@@ -87,26 +93,25 @@ public class AppointmentRecordsController {
         int userId;
         boolean appointmentInDatabase;
 
-        String[] startAppointmentSplit = newStart.split(" ");
-
-        String[] startAppointmentTimeSplit = startAppointmentSplit[1].split(":");
-
-        if (Integer.parseInt(startAppointmentTimeSplit[0]) >= 17)
-        {
-            System.out.println("Start time is outside of business hours - our organization closes at 17:00 (5:00 PM)");
-            throw new IllegalArgumentException("Cannot create a meeting outside of business hours");
-        }
-
-
-        Appointment newAppointment = new Appointment(newTitle, newDescription, newLocation, newContact, newType, newUrl, newStart, newEnd);
-
-        System.out.println("New appointment was created successfully with title: " + newTitle);
-
-        assert newAppointment != null : "Appointment object creation failed.";
-
         //Get customer selected, if none selected throw exception, and retrieve customer Id from Database
         try
         {
+            String[] startAppointmentSplit = newStart.split(" ");
+
+            String[] startAppointmentTimeSplit = startAppointmentSplit[1].split(":");
+
+            if (Integer.parseInt(startAppointmentTimeSplit[0]) >= 17 || Integer.parseInt(startAppointmentTimeSplit[0]) < 8)
+            {
+                System.out.println("Start time is outside of business hours - our organization opens at 08:00 and closes at 17:00 (5:00 PM)");
+                throw new IllegalArgumentException("Cannot create a meeting outside of business hours");
+            }
+
+
+            Appointment newAppointment = new Appointment(newTitle, newDescription, newLocation, newContact, newType, newUrl, newStart, newEnd);
+
+            System.out.println("New appointment was created successfully with title: " + newTitle);
+
+            assert newAppointment != null : "Appointment object creation failed.";
 
             Appointment.checkAppointmentConflicts(newAppointment);
 
@@ -152,6 +157,23 @@ public class AppointmentRecordsController {
         {
             System.out.println("Date/Times were not inputted in correct format.");
         }
+        catch (ArrayIndexOutOfBoundsException e)
+        {
+            System.out.println("Appointment start and/or end fields were entered incorrectly - please reenter in the prompted format.");
+        }
+
+
+        ObservableList<String> appointmentMonths = FXCollections.observableArrayList();
+        try {
+            appointmentMonths = Database.getDistinctAppointmentMonths();
+        }
+        catch (SQLException e)
+        {
+            System.out.println("Unable to retrieve distinct appointment months from database");
+        }
+
+        monthComboBoxSelector.setItems(appointmentMonths);
+
 
 
     }
@@ -160,6 +182,10 @@ public class AppointmentRecordsController {
     {
         String chosenCustomerName = customerComboBoxSelector.getSelectionModel().getSelectedItem();
         int chosenCustomerId;
+
+        //Need to clear other combo boxes when one is selected
+        //monthComboBoxSelector.valueProperty().setValue(null);
+        //weekComboBoxSelector.valueProperty().setValue(null);
 
         System.out.println(chosenCustomerName);
 
@@ -180,10 +206,45 @@ public class AppointmentRecordsController {
         }
     }
 
+    public void specificMonthChosen (ActionEvent actionEvent)
+    {
+        String chosenMonth = monthComboBoxSelector.getSelectionModel().getSelectedItem();
+        System.out.println("Chosen month: " + chosenMonth);
+
+        //customerComboBoxSelector.valueProperty().setValue(null);
+        //weekComboBoxSelector.valueProperty().setValue(null);
+
+        if (chosenMonth != null) {
+
+            chosenMonthData = Database.checkAppointmentMonths(chosenMonth);
+            appointmentTableView.setItems(chosenMonthData);
+        }
+
+    }
+
+    public void specificWeekChosen (ActionEvent actionEvent)
+    {
+        //customerComboBoxSelector.valueProperty().setValue(null);
+        //monthComboBoxSelector.valueProperty().setValue(null);
+
+        String chosenWeek = weekComboBoxSelector.getSelectionModel().getSelectedItem();
+        System.out.println("Chosen week: " + chosenWeek);
+
+        if (chosenWeek != null)
+        {
+            chosenWeekData = Database.checkAppointmentWeeks(chosenWeek);
+            appointmentTableView.setItems(chosenWeekData);
+
+        }
+
+    }
+
     public void clearSelectionsButtonClicked (ActionEvent actionEvent)
     {
         customerComboBoxSelector.valueProperty().set(null);
         appointmentTableView.setItems(data);
+        weekComboBoxSelector.valueProperty().set(null);
+        monthComboBoxSelector.valueProperty().set(null);
     }
 
     public void modifyAppointmentButtonClicked (ActionEvent actionEvent)
@@ -240,11 +301,17 @@ public class AppointmentRecordsController {
 
     public void initialize()
     {
+
+        ObservableList<String> appointmentMonths = FXCollections.observableArrayList();
+        ObservableList<String> appointmentWeeks = FXCollections.observableArrayList();
+
         noCustomerSelectedLabel.setVisible(false);
         modifyAppointmentErrorLabel.setVisible(false);
 
         try {
             ResultSet customers = Database.getAllCustomers();
+            appointmentMonths = Database.getDistinctAppointmentMonths();
+            appointmentWeeks = Database.getDistinctAppointmentWeeks();
 
             while (customers.next()) {
 
@@ -261,6 +328,9 @@ public class AppointmentRecordsController {
         System.out.println(Customer.getCustomerNames());
         customerComboBox.setItems(Customer.getCustomerNames());
         customerComboBoxSelector.setItems(Customer.getCustomerNames());
+        monthComboBoxSelector.setItems(appointmentMonths);
+        weekComboBoxSelector.setItems(appointmentWeeks);
+
 
         //Set to equate to the model in order to allow reflection to occur with javabeans (getters, setters, encapsulation)
         appointmentTitleTableColumn.setCellValueFactory(new PropertyValueFactory<Appointment, String>("appointmentTitle"));

@@ -3,11 +3,13 @@ package Model;
 import com.mysql.cj.jdbc.MysqlDataSource;
 import com.mysql.cj.jdbc.exceptions.MysqlDataTruncation;
 import com.mysql.cj.protocol.Resultset;
+import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
 import javax.sql.DataSource;
 import java.sql.*;
+import java.time.LocalDate;
 import java.util.*;
 import java.sql.Date;
 
@@ -841,18 +843,223 @@ public class Database {
 
         return appointments;
     }
-
-    public static void main(String[] args)
+    public static ObservableList<String> getDistinctAppointmentMonths() throws SQLException
     {
-        Country newCountry = new Country();
-        newCountry.setCountry("US");
+        Connection conn;
+        PreparedStatement prepStmt = null;
+        ResultSet appointmentMonths = null;
 
-        Database.getCountryId(newCountry);
+        ObservableList<String> appointmentMonthsList = FXCollections.observableArrayList();
+
+        conn = Database.checkDataSource().getConnection();
+        prepStmt = conn.prepareStatement("select distinct DATE_FORMAT(start, '%Y-%m') AS monthName FROM appointment;");
+        appointmentMonths = prepStmt.executeQuery();
+
+        while (appointmentMonths.next())
+        {
+            String monthName = null;
+            monthName = appointmentMonths.getString("monthName");
+
+            appointmentMonthsList.add(monthName);
+        }
+
+        return appointmentMonthsList;
+
+    }
+
+    public static ObservableList<String> getDistinctAppointmentWeeks() throws SQLException
+    {
+        Connection conn;
+        PreparedStatement prepStmt = null;
+        ResultSet appointmentWeeks = null;
+
+        ObservableList<String> appointmentWeeksList = FXCollections.observableArrayList();
+
+        conn = Database.checkDataSource().getConnection();
+        prepStmt = conn.prepareStatement("select distinct DATE(DATE_ADD(start, INTERVAL(-WEEKDAY(start)) DAY)) AS weekName FROM appointment;");
+        appointmentWeeks = prepStmt.executeQuery();
+
+        while (appointmentWeeks.next())
+        {
+            String weekName = null;
+            weekName = appointmentWeeks.getString("weekName");
+
+            appointmentWeeksList.add(weekName);
+        }
+
+        return appointmentWeeksList;
+
+    }
+
+    public static ObservableList<Appointment> checkAppointmentMonths(String chosenMonth)
+    {
+        ObservableList<Appointment> passedAppointments = FXCollections.observableArrayList();
+        ResultSet allAppointmentsResultSet = null;
+        String databaseAppointmentDate;
+
+        try {
+            allAppointmentsResultSet = Database.getAllAppointments();
+
+            while (allAppointmentsResultSet.next())
+            {
+                String appointmentDateFormatted = null;
+
+                databaseAppointmentDate = allAppointmentsResultSet.getString("start");
+
+                System.out.println(databaseAppointmentDate);
+
+                String[] dateTimeSplit = databaseAppointmentDate.split(" ");
+                String[] dateSplit = dateTimeSplit[0].split(" ");
+
+                System.out.println(dateSplit[0]);
+
+                String[] dayMonthYearSplit = dateSplit[0].split("-");
+
+                appointmentDateFormatted = dayMonthYearSplit[0] + "-" + dayMonthYearSplit[1];
+
+                System.out.println(appointmentDateFormatted);
+
+                System.out.println("Checked month: " + chosenMonth + " & database Appointment Month: " + appointmentDateFormatted);
+
+                if (chosenMonth.equals(appointmentDateFormatted))
+                {
+                    System.out.println("Month matches!");
+
+                    String appointmentTitle;
+                    String appointmentDescription;
+                    String appointmentLocation;
+                    String appointmentContact;
+                    String appointmentType;
+                    String url;
+                    String appointmentStart;
+                    String appointmentEnd;
+
+                    appointmentTitle = allAppointmentsResultSet.getString("title");
+                    appointmentDescription = allAppointmentsResultSet.getString("description");
+                    appointmentLocation = allAppointmentsResultSet.getString("location");
+                    appointmentContact = allAppointmentsResultSet.getString("contact");
+                    appointmentType = allAppointmentsResultSet.getString("type");
+                    url = allAppointmentsResultSet.getString("url");
+                    appointmentStart = allAppointmentsResultSet.getString("start");
+                    appointmentEnd = allAppointmentsResultSet.getString("end");
+
+                    Appointment newAppointment = new Appointment(appointmentTitle, appointmentDescription, appointmentLocation, appointmentContact, appointmentType, url, appointmentStart, appointmentEnd);
+
+                    passedAppointments.add(newAppointment);
+                }
+
+
+            }
+
+
+
+        }
+        catch (SQLException e)
+        {
+            e.printStackTrace();
+        }
+
+        return passedAppointments;
+    }
+
+    public static ObservableList<Appointment> checkAppointmentWeeks(String chosenWeek)
+    {
+        ObservableList<Appointment> passedAppointments = FXCollections.observableArrayList();
+        ObservableList<String> distinctDatabaseWeeks = FXCollections.observableArrayList();
+        ResultSet allAppointmentsResultSet = null;
+        String databaseAppointmentDate;
+
+        String[] chosenWeekDateTimeSplit = chosenWeek.split(" ");
+        String[] chosenWeekDateSplit = chosenWeekDateTimeSplit[0].split("-");
+
+        int chosenYear = Integer.parseInt(chosenWeekDateSplit[0]);
+        int chosenMonth = Integer.parseInt(chosenWeekDateSplit[1]);
+        int chosenDay = Integer.parseInt(chosenWeekDateSplit[2]);
+        int endOfWeek = chosenDay + 6;
+
+        LocalDate chosenWeekDate = LocalDate.of(chosenYear, chosenMonth, chosenDay);
+        LocalDate endOfWeekDate = chosenWeekDate.plusDays(6);
+
+        LocalDate compareToChosenWeekDate = chosenWeekDate.minusDays(1);
+        LocalDate compareToEndOfWeekDate = endOfWeekDate.plusDays(1);
+
+        System.out.println("Start of the filtered week day is: " + chosenWeekDate);
+        System.out.println("The end of the filtered week day is: " + endOfWeekDate);
+
+        try {
+
+            String appointmentDateFormatted;
+
+            allAppointmentsResultSet = Database.getAllAppointments();
+            distinctDatabaseWeeks = Database.getDistinctAppointmentWeeks();
+            System.out.println(distinctDatabaseWeeks);
+
+            while (allAppointmentsResultSet.next())
+            {
+
+                databaseAppointmentDate = allAppointmentsResultSet.getString("start");
+                System.out.println(databaseAppointmentDate);
+
+                String[] dateTimeSplit = databaseAppointmentDate.split(" ");
+                String[] dateSplit = dateTimeSplit[0].split("-");
+
+                int checkedYear = Integer.parseInt(dateSplit[0]);
+                int checkedMonth = Integer.parseInt(dateSplit[1]);
+                int checkedDay = Integer.parseInt(dateSplit[2]);
+
+                LocalDate checkedWeekDate = LocalDate.of(checkedYear, checkedMonth, checkedDay);
+
+                if (checkedWeekDate.isAfter(compareToChosenWeekDate) && checkedWeekDate.isBefore(compareToEndOfWeekDate))
+                {
+                    //everything passed - add to observable list and return
+                    System.out.println("week matches!");
+
+                    String appointmentTitle;
+                    String appointmentDescription;
+                    String appointmentLocation;
+                    String appointmentContact;
+                    String appointmentType;
+                    String url;
+                    String appointmentStart;
+                    String appointmentEnd;
+
+                    appointmentTitle = allAppointmentsResultSet.getString("title");
+                    appointmentDescription = allAppointmentsResultSet.getString("description");
+                    appointmentLocation = allAppointmentsResultSet.getString("location");
+                    appointmentContact = allAppointmentsResultSet.getString("contact");
+                    appointmentType = allAppointmentsResultSet.getString("type");
+                    url = allAppointmentsResultSet.getString("url");
+                    appointmentStart = allAppointmentsResultSet.getString("start");
+                    appointmentEnd = allAppointmentsResultSet.getString("end");
+
+                    Appointment newAppointment = new Appointment(appointmentTitle, appointmentDescription, appointmentLocation, appointmentContact, appointmentType, url, appointmentStart, appointmentEnd);
+
+                    passedAppointments.add(newAppointment);
+                }
+
+
+
+            }
+
+
+
+        }
+        catch (SQLException e)
+        {
+            e.printStackTrace();
+        }
+
+        return passedAppointments;
+
+    }
+
+    public static void main(String[] args) {
+        //Database.checkAppointmentWeeks("2019-12-31");
+    }
+
     }
 
 
-
-}
 
 /*
     public static ResultSet getAllAddress()
