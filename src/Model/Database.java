@@ -829,6 +829,68 @@ public class Database {
 
     }
 
+    public static ResultSet reportMonthlyPresentationTypes ()
+    {
+        Connection conn = null;
+        PreparedStatement ps = null;
+        ResultSet finalResultCountTypes = null;
+
+        try {
+            conn = Database.checkDataSource().getConnection();
+            ps = conn.prepareStatement("SELECT type, DATE_FORMAT(start, '%Y-%m') AS month, count(type) AS total FROM appointment GROUP BY type, month;");
+            finalResultCountTypes = ps.executeQuery();
+        }
+        catch (SQLException e)
+        {
+            e.printStackTrace();
+        }
+
+        return finalResultCountTypes;
+    }
+
+    public static ResultSet reportMonthlyAppointmentCount ()
+    {
+        Connection conn = null;
+        PreparedStatement ps;
+        ResultSet finalMonthlyAppointmentCounts = null;
+
+        try {
+            conn = Database.checkDataSource().getConnection();
+            ps = conn.prepareStatement("select concat(MONTHNAME(start), ' ', YEAR(start)) AS month, count(appointmentId) AS num_appointments FROM appointment GROUP BY month;");
+            finalMonthlyAppointmentCounts = ps.executeQuery();
+
+        }
+        catch (SQLException e)
+        {
+            e.printStackTrace();
+        }
+
+        return finalMonthlyAppointmentCounts;
+
+
+    }
+
+    public static ResultSet reportConsultantSchedule ()
+    {
+        Connection conn = null;
+        PreparedStatement ps = null;
+        ResultSet finalConsultantSchedule = null;
+
+        try {
+            conn = Database.checkDataSource().getConnection();
+            ps = conn.prepareStatement("SELECT title, start, end FROM appointment;");
+            finalConsultantSchedule = ps.executeQuery();
+        }
+        catch (SQLException e)
+        {
+            e.printStackTrace();
+        }
+
+        return finalConsultantSchedule;
+
+    }
+
+
     public static ResultSet getAllAppointments() throws SQLException
     {
         Connection conn;
@@ -1052,6 +1114,7 @@ public class Database {
         return passedAppointments;
 
     }
+
 
     public static void main(String[] args) {
         //Database.checkAppointmentWeeks("2019-12-31");

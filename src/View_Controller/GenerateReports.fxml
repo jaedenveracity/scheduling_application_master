@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.text.*?>
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<AnchorPane prefHeight="474.0" prefWidth="707.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="View_Controller.GenerateReportsController">
+   <children>
+      <Label layoutX="59.0" layoutY="20.0" prefHeight="17.0" prefWidth="203.0" text="Monthly Presentation Types Count">
+         <font>
+            <Font name="System Bold" size="12.0" />
+         </font>
+      </Label>
+      <ListView fx:id="monthTypeListView" layoutX="28.0" layoutY="61.0" prefHeight="178.0" prefWidth="70.0" />
+      <ListView fx:id="presentationTypeListView" layoutX="111.0" layoutY="61.0" prefHeight="178.0" prefWidth="98.0" />
+      <ListView fx:id="typeCountListView" layoutX="223.0" layoutY="61.0" prefHeight="178.0" prefWidth="70.0" />
+      <Label layoutX="44.0" layoutY="44.0" prefHeight="17.0" prefWidth="38.0" text="Month" />
+      <Label layoutX="111.0" layoutY="44.0" prefHeight="17.0" prefWidth="98.0" text="Presentation Type" />
+      <Label layoutX="242.0" layoutY="44.0" prefHeight="17.0" prefWidth="32.0" text="Total" />
+      <Label layoutX="398.0" layoutY="20.0" prefHeight="17.0" prefWidth="117.0" text="Consultant Schedule">
+         <font>
+            <Font name="System Bold" size="12.0" />
+         </font>
+      </Label>
+      <Label layoutX="533.0" layoutY="20.0" prefHeight="17.0" prefWidth="70.0" text="Consultant:" />
+      <Label fx:id="consultantName" layoutX="603.0" layoutY="20.0" prefHeight="17.0" prefWidth="70.0" text="test" />
+      <ListView fx:id="appointmentStartListView" layoutX="457.0" layoutY="61.0" prefHeight="178.0" prefWidth="108.0" />
+      <ListView fx:id="appointmentEndListView" layoutX="572.0" layoutY="61.0" prefHeight="178.0" prefWidth="108.0" />
+      <ListView fx:id="appointmentTitleListView" layoutX="332.0" layoutY="61.0" prefHeight="178.0" prefWidth="117.0" />
+      <Label layoutX="348.0" layoutY="44.0" prefHeight="17.0" prefWidth="86.0" text="Appointment" />
+      <Label layoutX="495.0" layoutY="44.0" prefHeight="17.0" prefWidth="32.0" text="Start" />
+      <Label layoutX="614.0" layoutY="44.0" prefHeight="17.0" prefWidth="25.0" text="End" />
+      <Separator layoutX="311.0" layoutY="14.0" orientation="VERTICAL" prefHeight="229.0" prefWidth="0.0" />
+      <Label layoutX="230.0" layoutY="248.0" prefHeight="17.0" prefWidth="169.0" text="Monthly Appointment Count">
+         <font>
+            <Font name="System Bold" size="12.0" />
+         </font>
+      </Label>
+      <ListView fx:id="monthAppointmentCountListView" layoutX="223.0" layoutY="282.0" prefHeight="178.0" prefWidth="86.0" />
+      <ListView fx:id="appointmentCountListView" layoutX="319.0" layoutY="282.0" prefHeight="178.0" prefWidth="86.0" />
+      <Label layoutX="243.0" layoutY="265.0" prefHeight="17.0" prefWidth="38.0" text="Month" />
+      <Label layoutX="346.0" layoutY="265.0" prefHeight="17.0" prefWidth="32.0" text="Total" />
+   </children>
+</AnchorPane>

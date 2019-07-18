@@ -182,6 +182,26 @@ public class MainScreenController {
         }
     }
 
+    public void generateReportsButtonClicked (ActionEvent actionEvent)
+    {
+        try {
+            //Change to reports page fxml
+            Parent generateReportsButtonParent = FXMLLoader.load(getClass().getResource("GenerateReports.fxml"));
+
+            Scene generateReportsScene = new Scene (generateReportsButtonParent);
+
+            Stage window = (Stage) ((Node) actionEvent.getSource()).getScene().getWindow();
+
+            window.setScene(generateReportsScene);
+            window.show();
+        }
+        catch (IOException e)
+        {
+            e.printStackTrace();
+        }
+
+    }
+
     public void appointmentRecordsButtonClicked (ActionEvent actionEvent)
     {
         try {
