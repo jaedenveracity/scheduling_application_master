@@ -141,7 +141,7 @@ public class AppointmentRecordsController {
             if (Integer.parseInt(startAppointmentTimeSplit[0]) >= 17 || Integer.parseInt(startAppointmentTimeSplit[0]) < 8)
             {
                 System.out.println("Start time is outside of business hours - our organization opens at 08:00 and closes at 17:00 (5:00 PM)");
-                //throw new IllegalArgumentException("Cannot create a meeting outside of business hours");
+                throw new IllegalArgumentException("Cannot create a meeting outside of business hours");
             }
 
             //Adjust time for timezone DST before creating appointment and inserting into database

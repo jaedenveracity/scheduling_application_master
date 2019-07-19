@@ -11,6 +11,8 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.BiPredicate;
+import java.util.function.Predicate;
 
 public class Appointment {
 
@@ -83,6 +85,11 @@ public class Appointment {
 
     public static void checkAppointmentConflictsNew (Appointment newAppointment) throws OverlappingAppointmentException
     {
+        //Used lambda functions with built in functional interface (BiPredicate) to simplify my check for appointment conflicts
+        BiPredicate<LocalDateTime, LocalDateTime> appointmentStartTimeCheck = (LocalDateTime a, LocalDateTime b) -> ((a.isAfter(b) || a.isEqual(b)));
+        BiPredicate<LocalDateTime, LocalDateTime> appointmentEndTimeCheck = (LocalDateTime a, LocalDateTime b) -> ((a.isBefore(b) || a.isEqual(b)));
+
+
         DateTimeFormatter df = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
         ResultSet allAppointments = null;
 
@@ -111,6 +118,16 @@ public class Appointment {
                 LocalDateTime checkedApptStartDateTime = LocalDateTime.parse(checkedAppointmentStart, df);
                 LocalDateTime checkedApptEndDateTime = LocalDateTime.parse(checkedAppointmentEnd, df);
 
+                if (appointmentStartTimeCheck.test(newApptStartDateTime, checkedApptStartDateTime))
+                {
+                    if (appointmentEndTimeCheck.test(newApptStartDateTime, checkedApptEndDateTime))
+                    {
+                        throw new OverlappingAppointmentException();
+                    }
+                }
+
+                /*
+
                 if(newApptStartDateTime.isAfter(checkedApptStartDateTime) || newApptStartDateTime.isEqual(checkedApptStartDateTime))
                 {
                     if (newApptStartDateTime.isBefore(checkedApptEndDateTime) || newApptStartDateTime.isEqual(checkedApptEndDateTime))
@@ -118,6 +135,10 @@ public class Appointment {
                         throw new OverlappingAppointmentException();
                     }
                 }
+
+                */
+
+
 
                 if (newApptEndDateTime.isAfter(checkedApptStartDateTime) || newApptEndDateTime.isEqual(checkedApptStartDateTime))
                 {
