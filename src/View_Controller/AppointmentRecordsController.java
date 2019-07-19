@@ -58,6 +58,7 @@ public class AppointmentRecordsController {
     @FXML private Label appointmentConflictLabel;
     @FXML private Label requiredFieldLabel;
     @FXML private Label endBeforeStartLabel;
+    @FXML private Label endBeforeCurrentLabel;
 
     //To hold customer data retrieved from SQL
     private ObservableList<Appointment> data;
@@ -116,6 +117,7 @@ public class AppointmentRecordsController {
 
             LocalDateTime startingDateTime = LocalDateTime.parse(newStart, formatter);
             LocalDateTime endingDateTime = LocalDateTime.parse(newEnd, formatter);
+            LocalDateTime currentDateTime = LocalDateTime.now();
 
             if (endingDateTime.isBefore(startingDateTime) || endingDateTime.isEqual(startingDateTime))
             {
@@ -123,12 +125,14 @@ public class AppointmentRecordsController {
                 throw new Exception("Ending of appointment is before or equal to the  start of appointment.");
             }
 
-
+            if (startingDateTime.isBefore(currentDateTime))
+            {
+                endBeforeCurrentLabel.setVisible(true);
+                throw new Exception("Appointment cannot be scheduled before current date.");
+            }
 
             System.out.println("Our appointment start date/time is: " + startingDateTime);
             System.out.println("Our appointment ending date/time is: " + endingDateTime);
-
-
 
             String[] startAppointmentSplit = newStart.split(" ");
 
@@ -162,7 +166,7 @@ public class AppointmentRecordsController {
 
             assert newAppointment != null : "Appointment object creation failed.";
 
-            Appointment.checkAppointmentConflicts(newAppointment);
+            Appointment.checkAppointmentConflictsNew(newAppointment);
 
             chosenCustomerName = customerComboBox.getSelectionModel().getSelectedItem();
 
@@ -213,6 +217,11 @@ public class AppointmentRecordsController {
                     if (modifyAppointmentErrorLabel.isVisible())
                     {
                         modifyAppointmentErrorLabel.setVisible(false);
+                    }
+
+                    if (endBeforeStartLabel.isVisible())
+                    {
+                        endBeforeStartLabel.setVisible(false);
                     }
 
                     if (endBeforeStartLabel.isVisible())
@@ -400,6 +409,7 @@ public class AppointmentRecordsController {
         appointmentConflictLabel.setVisible(false);
         requiredFieldLabel.setVisible(false);
         endBeforeStartLabel.setVisible(false);
+        endBeforeCurrentLabel.setVisible(false);
 
         try {
             ResultSet customers = Database.getAllCustomers();

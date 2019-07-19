@@ -8,6 +8,7 @@ import javafx.collections.ObservableList;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -78,6 +79,60 @@ public class Appointment {
 
     public static void setAllAppointments(ObservableList<Appointment> allAppointments) {
         Appointment.allAppointments = allAppointments;
+    }
+
+    public static void checkAppointmentConflictsNew (Appointment newAppointment) throws OverlappingAppointmentException
+    {
+        DateTimeFormatter df = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+        ResultSet allAppointments = null;
+
+        String checkedAppointmentStart;
+        String checkedAppointmentEnd;
+
+        //Get new appointment start and end dates/times
+        String newApptStart = newAppointment.getAppointmentStart();
+        String newApptEnd = newAppointment.getAppointmentEnd();
+
+        //Cast new appointment start and end times to LocalDateTime objects
+        LocalDateTime newApptStartDateTime = LocalDateTime.parse(newApptStart, df);
+        LocalDateTime newApptEndDateTime = LocalDateTime.parse(newApptEnd, df);
+
+        //Test
+        System.out.println("New appointment start date time is:  " + newApptStartDateTime.toString() + " and end date time is: " + newApptEndDateTime.toString());
+
+        try {
+            allAppointments = Database.getAllAppointments();
+
+            while (allAppointments.next())
+            {
+                checkedAppointmentStart = allAppointments.getString("start");
+                checkedAppointmentEnd = allAppointments.getString("end");
+
+                LocalDateTime checkedApptStartDateTime = LocalDateTime.parse(checkedAppointmentStart, df);
+                LocalDateTime checkedApptEndDateTime = LocalDateTime.parse(checkedAppointmentEnd, df);
+
+                if(newApptStartDateTime.isAfter(checkedApptStartDateTime) || newApptStartDateTime.isEqual(checkedApptStartDateTime))
+                {
+                    if (newApptStartDateTime.isBefore(checkedApptEndDateTime) || newApptStartDateTime.isEqual(checkedApptEndDateTime))
+                    {
+                        throw new OverlappingAppointmentException();
+                    }
+                }
+
+                if (newApptEndDateTime.isAfter(checkedApptStartDateTime) || newApptEndDateTime.isEqual(checkedApptStartDateTime))
+                {
+                    if (newApptEndDateTime.isBefore(checkedApptEndDateTime) || newApptEndDateTime.isEqual(checkedApptEndDateTime))
+                    {
+                        throw new OverlappingAppointmentException();
+                    }
+                }
+
+            }
+        }
+        catch (SQLException e)
+        {
+            e.printStackTrace();
+        }
     }
 
     public static void checkAppointmentConflicts (Appointment newAppointment) throws OverlappingAppointmentException
@@ -250,6 +305,8 @@ public class Appointment {
         this.url.set(url);
     }
 }
+
+
 
 
 
