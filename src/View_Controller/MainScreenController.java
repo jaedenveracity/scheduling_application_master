@@ -160,8 +160,9 @@ public class MainScreenController {
             test.show();
 
         }
+        String curTime = LocalTime.now().format(df);
 
-        timeLabel.setText(User.getCurrentTime());
+        timeLabel.setText(curTime);
     }
 
     public void exitButtonClicked (ActionEvent actionEvent)

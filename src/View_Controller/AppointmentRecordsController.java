@@ -18,13 +18,13 @@ import javafx.stage.Stage;
 import java.io.IOException;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.LocalTime;
+import java.time.*;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
+import java.util.TimeZone;
 
 public class AppointmentRecordsController {
 
@@ -140,6 +140,21 @@ public class AppointmentRecordsController {
                 //throw new IllegalArgumentException("Cannot create a meeting outside of business hours");
             }
 
+            //Adjust time for timezone DST before creating appointment and inserting into database
+            DateTimeFormatter df = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+            LocalDateTime apptStartDateTime = LocalDateTime.parse(newStart, df);
+            LocalDateTime apptEndDateTime = LocalDateTime.parse(newEnd, df);
+
+            ZoneId curZone = ZoneId.systemDefault();
+            ZonedDateTime apptStartSystemDefault = apptStartDateTime.atZone(curZone);
+            ZonedDateTime apptEndSystemDefault = apptEndDateTime.atZone(curZone);
+
+            ZoneId databaseZone = ZoneId.of("America/Chicago");
+            ZonedDateTime apptStartDatabase = apptStartSystemDefault.withZoneSameInstant(databaseZone);
+            ZonedDateTime apptEndDatabase = apptEndSystemDefault.withZoneSameInstant(databaseZone);
+
+            newStart = apptStartDatabase.format(df);
+            newEnd = apptEndDatabase.format(df);
 
             Appointment newAppointment = new Appointment(newTitle, newDescription, newLocation, newContact, newType, newUrl, newStart, newEnd);
 
@@ -444,8 +459,55 @@ public class AppointmentRecordsController {
                 readableAppointment.setAppointmentStart(appointments.getString("start"));
                 readableAppointment.setAppointmentEnd(appointments.getString("end"));
 
+                String appointmentStartTime = readableAppointment.getAppointmentStart();
+                String appointmentEndTime = readableAppointment.getAppointmentEnd();
+
+                //Adjust appointment times based on timezone and DST
+                DateTimeFormatter apptDf = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+                LocalDateTime apptStartDateTime = LocalDateTime.parse(appointmentStartTime, apptDf);
+                LocalDateTime apptEndDateTime = LocalDateTime.parse(appointmentEndTime, apptDf);
+
+                LocalDateTime curDateTime = LocalDateTime.now();
+
+                System.out.println("Appointment start date/time is: " + apptStartDateTime);
+
+                ZoneId curZone = ZoneId.systemDefault();
+                ZonedDateTime apptZonedStartTimeCst = apptStartDateTime.atZone(curZone);
+                ZonedDateTime apptZonedEndTimeCst = apptEndDateTime.atZone(curZone);
+
+                ZoneId testZone = ZoneId.of("America/New_York");
+                ZonedDateTime apptZonedStartDateTime = apptZonedStartTimeCst.withZoneSameInstant(testZone);
+                ZonedDateTime apptZonedEndDateTime = apptZonedEndTimeCst.withZoneSameInstant(testZone);
+
+                System.out.println("Zone id of current system is: " + curZone);
+                System.out.println("Zone id of test system is: " + testZone);
+
+                String appointmentZonedStartTime = apptZonedStartDateTime.format(apptDf);
+                String appointmentZonedStartTimeCst = apptZonedStartTimeCst.format(apptDf);
+                
+                String appointmentZonedEndTime = apptZonedEndDateTime.format(apptDf);
+                String appointmentZonedEndTimeCst = apptZonedEndTimeCst.format(apptDf);
+
+                System.out.println("Appointment start date/time at zone: " + curZone + " is: " + appointmentZonedStartTimeCst);
+                System.out.println("Appointment start date/time at zone: " + testZone + " is: " + appointmentZonedStartTime);
+
+                System.out.println("Appointment end date/time at zone: " + curZone + " is: " + appointmentZonedEndTimeCst);
+                System.out.println("Appointment start date/time at zone: " + testZone + " is: " + appointmentZonedEndTime);
+                
+                readableAppointment.setAppointmentStart(appointmentZonedStartTimeCst);
+                readableAppointment.setAppointmentEnd(appointmentZonedEndTimeCst);
+
+
+
+
                 data.add(readableAppointment);
             }
+
+
+
+
+
+
         }
         catch (SQLException e)
         {

@@ -16,6 +16,10 @@ import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 
 import java.io.IOException;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
 
 public class AppointmentModificationController {
 
@@ -88,6 +92,22 @@ public class AppointmentModificationController {
         }
 
         System.out.println("Database customer id is: " + customerId);
+
+        //Adjust time for timezone & DST before updating appointment record in database
+        DateTimeFormatter df = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+        LocalDateTime apptStartDateTime = LocalDateTime.parse(newAppointmentStart);
+        LocalDateTime apptEndDateTime = LocalDateTime.parse(newAppointmentEnd, df);
+
+        ZoneId curZone = ZoneId.systemDefault();
+        ZonedDateTime apptStartSystemDefault = apptStartDateTime.atZone(curZone);
+        ZonedDateTime apptEndSystemDefault = apptEndDateTime.atZone(curZone);
+
+        ZoneId databaseZone = ZoneId.of("America/Chicago");
+        ZonedDateTime apptStartDatabase = apptStartSystemDefault.withZoneSameInstant(databaseZone);
+        ZonedDateTime apptEndDatabase = apptEndSystemDefault.withZoneSameInstant(databaseZone);
+
+        newAppointmentStart = apptStartDatabase.format(df);
+        newAppointmentEnd = apptEndDatabase.format(df);
 
         Appointment updatableAppointment = new Appointment(newAppointmentTitle, newAppointmentDescription, newAppointmentLocation, newAppointmentContact, newAppointmentType, newAppointmentUrl, newAppointmentStart, newAppointmentEnd);
 
