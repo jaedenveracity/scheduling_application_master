@@ -31,6 +31,7 @@ public class LoginScreenController {
     @FXML private PasswordField passwordLoginField;
 
     @FXML private Label loginIssueLabel;
+    @FXML private Label loginLabel;
 
     private User curUser = null;
     private int loginAttempts = 0;
@@ -39,6 +40,8 @@ public class LoginScreenController {
     private static Locale curLocale = Locale.getDefault();
     private static Locale testLocaleGermany = Locale.GERMANY;
     private static Locale testLocaleFrance = Locale.FRANCE;
+
+    @FXML Button loginButton;
 
 
     //test Locale Germany
@@ -157,6 +160,14 @@ public class LoginScreenController {
     {
         //Set failed user attempt to default not show
         loginIssueLabel.setVisible(false);
+        loginButton.setText(rb.getString("login"));
+        loginLabel.setText(rb.getString("login"));
+
+        usernameLoginField.setPromptText(rb.getString("username"));
+        passwordLoginField.setPromptText(rb.getString("password"));
+
+
+
 
         System.out.println("Current locale for user is: " + curLocale);
 

@@ -41,6 +41,7 @@ public class CustomerRecordsController {
     @FXML private TableColumn<Customer, String> customerCountryTableColumn;
 
     @FXML private Label invalidCustomerDataLabel;
+    @FXML private Label nonNumericLabel;
 
     //To hold customer data retrieved from SQL
     private ObservableList<Customer> data;
@@ -80,6 +81,18 @@ public class CustomerRecordsController {
                     throw new Exception();
                 }
 
+                if (!Customer.isNumeric(newUserPhone))
+                {
+                    nonNumericLabel.setVisible(true);
+                    throw new IllegalArgumentException("Phone number entered was not numeric, please try again.");
+                }
+
+                if (!Customer.isNumeric(newUserPostal))
+                {
+                    nonNumericLabel.setVisible(true);
+                    throw new IllegalArgumentException("Postal code entered was non-numeric");
+                }
+
 
                 int cityId;
                 int addressId;
@@ -115,7 +128,12 @@ public class CustomerRecordsController {
                 customerCountryTextField.clear();
 
                 invalidCustomerDataLabel.setVisible(false);
+                nonNumericLabel.setVisible(false);
 
+            }
+            catch(IllegalArgumentException e)
+            {
+                e.printStackTrace();
             }
             catch(Exception e)
             {
@@ -175,6 +193,7 @@ public class CustomerRecordsController {
         customerCountryTableColumn.setCellValueFactory(new PropertyValueFactory<Customer, String>("country"));
 
         invalidCustomerDataLabel.setVisible(false);
+        nonNumericLabel.setVisible(false);
 
         data = FXCollections.observableArrayList();
 

@@ -59,6 +59,7 @@ public class AppointmentRecordsController {
     @FXML private Label requiredFieldLabel;
     @FXML private Label endBeforeStartLabel;
     @FXML private Label endBeforeCurrentLabel;
+    @FXML private Label outsideBusinessHoursLabel;
 
     //To hold customer data retrieved from SQL
     private ObservableList<Appointment> data;
@@ -107,6 +108,19 @@ public class AppointmentRecordsController {
         //Get customer selected, if none selected throw exception, and retrieve customer Id from Database
         try
         {
+
+            String[] startAppointmentSplit = newStart.split(" ");
+
+            String[] startAppointmentTimeSplit = startAppointmentSplit[1].split(":");
+
+            if (Integer.parseInt(startAppointmentTimeSplit[0]) >= 17 || Integer.parseInt(startAppointmentTimeSplit[0]) < 8)
+            {
+                System.out.println("Start time is outside of business hours - our organization opens at 08:00 and closes at 17:00 (5:00 PM)");
+                outsideBusinessHoursLabel.setVisible(true);
+                throw new OutsideBusinessHoursException("Cannot create a meeting outside of business hours");
+            }
+
+
             if (titleTextField.getText().trim().isEmpty() || descriptionTextField.getText().trim().isEmpty() || locationTextField.getText().trim().isEmpty() || contactTextField.getText().trim().isEmpty() || typeTextField.getText().trim().isEmpty() || urlTextField.getText().trim().isEmpty())
             {
                 requiredFieldLabel.setVisible(true);
@@ -129,19 +143,6 @@ public class AppointmentRecordsController {
             {
                 endBeforeCurrentLabel.setVisible(true);
                 throw new Exception("Appointment cannot be scheduled before current date.");
-            }
-
-            System.out.println("Our appointment start date/time is: " + startingDateTime);
-            System.out.println("Our appointment ending date/time is: " + endingDateTime);
-
-            String[] startAppointmentSplit = newStart.split(" ");
-
-            String[] startAppointmentTimeSplit = startAppointmentSplit[1].split(":");
-
-            if (Integer.parseInt(startAppointmentTimeSplit[0]) >= 17 || Integer.parseInt(startAppointmentTimeSplit[0]) < 8)
-            {
-                System.out.println("Start time is outside of business hours - our organization opens at 08:00 and closes at 17:00 (5:00 PM)");
-                throw new IllegalArgumentException("Cannot create a meeting outside of business hours");
             }
 
             //Adjust time for timezone DST before creating appointment and inserting into database
@@ -228,6 +229,11 @@ public class AppointmentRecordsController {
                     {
                         endBeforeStartLabel.setVisible(false);
                     }
+
+                    if (outsideBusinessHoursLabel.isVisible())
+                    {
+                        outsideBusinessHoursLabel.setVisible(false);
+                    }
                 }
             }
         }
@@ -255,6 +261,10 @@ public class AppointmentRecordsController {
         {
             System.out.println("Appointment start and/or end fields were entered incorrectly - please reenter in the prompted format.");
             requiredFieldLabel.setVisible(true);
+        }
+        catch (OutsideBusinessHoursException e)
+        {
+            e.printStackTrace();
         }
         catch (Exception e)
         {
@@ -410,6 +420,7 @@ public class AppointmentRecordsController {
         requiredFieldLabel.setVisible(false);
         endBeforeStartLabel.setVisible(false);
         endBeforeCurrentLabel.setVisible(false);
+        outsideBusinessHoursLabel.setVisible(false);
 
         try {
             ResultSet customers = Database.getAllCustomers();

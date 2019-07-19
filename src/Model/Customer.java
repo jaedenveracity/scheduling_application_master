@@ -171,6 +171,19 @@ public class Customer {
         return customerId;
     }
 
+    public static boolean isNumeric (String str) {
+
+        try {
+
+            Double.parseDouble(str);
+            return true;
+        }
+        catch (NumberFormatException e)
+        {
+            return false;
+        }
+    }
+
     public static void main(String[] args) {
 
         Customer jaeden = new Customer("Jaeden", "4359944440", "1172 W 3 pt", "Logan", "84341", "USA");
@@ -180,6 +193,7 @@ public class Customer {
         //(String userName, String userPhone, String userAddress, String userCity, String userPostal, String userCountry)
 
     }
+
 
 }
 

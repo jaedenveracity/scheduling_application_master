@@ -66,5 +66,6 @@
       <Label fx:id="requiredFieldLabel" layoutX="183.0" layoutY="364.0" prefHeight="17.0" prefWidth="347.0" text="A field that is required - was not entered. Please try again." textFill="RED" />
       <Label fx:id="endBeforeStartLabel" layoutX="180.0" layoutY="378.0" prefHeight="17.0" prefWidth="354.0" text="Ending of appointment entered is before/equal to start. Try again." textFill="RED" />
       <Label fx:id="endBeforeCurrentLabel" layoutX="6.0" layoutY="24.0" prefHeight="17.0" prefWidth="394.0" text="Ending of appointment entered is before/equal to current date. Try again." textFill="RED" />
+      <Label fx:id="outsideBusinessHoursLabel" layoutX="331.0" layoutY="323.0" prefHeight="17.0" prefWidth="420.0" text="Cannot schedule an appointment outside of business hours. Please try again." textFill="RED" />
    </children>
 </AnchorPane>
