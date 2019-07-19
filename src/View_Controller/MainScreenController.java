@@ -66,8 +66,9 @@ public class MainScreenController {
         String dateString;
         String currentDateString;
 
-        currentTime = LocalTime.parse(LocalTime.now().format(DateTimeFormatter.ofPattern("HH:mm")));
+        currentTime = LocalTime.parse(LocalTime.now().format(DateTimeFormatter.ofPattern("HH:mm:ss")));
         currentTimeString = LocalTime.now().format(DateTimeFormatter.ofPattern("HH:mm"));
+
         System.out.println("Current local time is: " +  currentTime);
 
         currentDateString = LocalDate.now().toString();
@@ -95,14 +96,17 @@ public class MainScreenController {
 
                 String[] dateTimeSplitStart = readableAppointment.getAppointmentStart().split(" ");
 
+                //System.out.println("The checked appointment after splitting date and time is: " + dateTimeSplitStart[0] + ", " + dateTimeSplitStart[1]);
+
                 dateString = dateTimeSplitStart[0];
 
-                System.out.println(dateTimeSplitStart[1]);
-                time = LocalTime.parse(dateTimeSplitStart[1]);
+                time = LocalTime.parse(dateTimeSplitStart[1], DateTimeFormatter.ofPattern("HH:mm:ss"));
+
+                //System.out.println("Our time after being changed to a LocalTime object is: " + time);
 
                 timeString = dateTimeSplitStart[1];
 
-                System.out.println("Current time for appointment is: " + time);
+                //System.out.println("Current time for appointment is: " + time);
 
                //Get hours and seconds from both current time and appointment and compare
                 String[] currentTimeSplit = currentTimeString.split(":");
@@ -114,6 +118,8 @@ public class MainScreenController {
                 int apptHour = Integer.parseInt(appointmentTimeSplit[0]);
                 int apptMinute = Integer.parseInt(appointmentTimeSplit[1]);
 
+                //System.out.println("Current Hour is: " + curHour + " , current minute is: " + curMinute + " ,appointmentHour is: " + apptHour  + " ,apptMinute is: " + apptMinute);
+
                 //Using LocalTime objects - checking fifteen minutes
 
                 if(currentDateString.equals(dateString)) {
@@ -121,14 +127,15 @@ public class MainScreenController {
                     System.out.println("Current Date matches an appointment date in our database. We have appointments today!");
 
                     currentTime = currentTime.minusSeconds(1);
+                    LocalTime currentTimePlusFifteen = currentTime.plusMinutes(15);
+                    currentTimePlusFifteen = currentTimePlusFifteen.plusSeconds(2);
 
-                    if (time.isAfter(currentTime)) {
+                    System.out.println("Our current time is: " + currentTime);
+                    System.out.println("Current time plus fifteen minutes is: " + currentTimePlusFifteen);
+                    System.out.println("Our appointment time being checked is: " + time);
 
-                        currentTime.plusSeconds(1);
-                        LocalTime currentTimePlusFifteen = currentTime.plusMinutes(15);
-                        currentTimePlusFifteen.plusSeconds(1);
+                    if (time.isAfter(currentTime) && time.isBefore(currentTimePlusFifteen)) {
 
-                        if (time.isBefore(currentTimePlusFifteen)) ;
                         System.out.println("Appointment time is within the next fifteen minutes!");
                         nextFifteenAppointmentTimes.append(timeString);
                         nextFifteenAppointmentTimes.append(" ");

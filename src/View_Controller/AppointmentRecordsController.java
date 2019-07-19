@@ -18,6 +18,11 @@ import javafx.stage.Stage;
 import java.io.IOException;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -50,6 +55,9 @@ public class AppointmentRecordsController {
 
     @FXML private Label noCustomerSelectedLabel;
     @FXML private Label modifyAppointmentErrorLabel;
+    @FXML private Label appointmentConflictLabel;
+    @FXML private Label requiredFieldLabel;
+    @FXML private Label endBeforeStartLabel;
 
     //To hold customer data retrieved from SQL
     private ObservableList<Appointment> data;
@@ -80,6 +88,7 @@ public class AppointmentRecordsController {
 
     public void addAppointmentButtonClicked (ActionEvent actionEvent)
     {
+
         String newTitle = titleTextField.getText();
         String newDescription = descriptionTextField.getText();
         String newLocation = locationTextField.getText();
@@ -93,9 +102,34 @@ public class AppointmentRecordsController {
         int userId;
         boolean appointmentInDatabase;
 
+
         //Get customer selected, if none selected throw exception, and retrieve customer Id from Database
         try
         {
+            if (titleTextField.getText().trim().isEmpty() || descriptionTextField.getText().trim().isEmpty() || locationTextField.getText().trim().isEmpty() || contactTextField.getText().trim().isEmpty() || typeTextField.getText().trim().isEmpty() || urlTextField.getText().trim().isEmpty())
+            {
+                requiredFieldLabel.setVisible(true);
+                throw new Exception("A field that is required was not entered, please enter this information and try again.");
+            }
+
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+
+            LocalDateTime startingDateTime = LocalDateTime.parse(newStart, formatter);
+            LocalDateTime endingDateTime = LocalDateTime.parse(newEnd, formatter);
+
+            if (endingDateTime.isBefore(startingDateTime) || endingDateTime.isEqual(startingDateTime))
+            {
+                endBeforeStartLabel.setVisible(true);
+                throw new Exception("Ending of appointment is before or equal to the  start of appointment.");
+            }
+
+
+
+            System.out.println("Our appointment start date/time is: " + startingDateTime);
+            System.out.println("Our appointment ending date/time is: " + endingDateTime);
+
+
+
             String[] startAppointmentSplit = newStart.split(" ");
 
             String[] startAppointmentTimeSplit = startAppointmentSplit[1].split(":");
@@ -103,7 +137,7 @@ public class AppointmentRecordsController {
             if (Integer.parseInt(startAppointmentTimeSplit[0]) >= 17 || Integer.parseInt(startAppointmentTimeSplit[0]) < 8)
             {
                 System.out.println("Start time is outside of business hours - our organization opens at 08:00 and closes at 17:00 (5:00 PM)");
-                throw new IllegalArgumentException("Cannot create a meeting outside of business hours");
+                //throw new IllegalArgumentException("Cannot create a meeting outside of business hours");
             }
 
 
@@ -136,15 +170,51 @@ public class AppointmentRecordsController {
                 {
                     data.add(newAppointment);
 
+                    titleTextField.clear();
+                    descriptionTextField.clear();
+                    locationTextField.clear();
+                    contactTextField.clear();
+                    typeTextField.clear();
+                    urlTextField.clear();
+                    startTextField.clear();
+                    endTextField.clear();
+
+
                     if (noCustomerSelectedLabel.isVisible())
                     {
                         noCustomerSelectedLabel.setVisible(false);
                     }
+
+                    if (appointmentConflictLabel.isVisible())
+                    {
+                        appointmentConflictLabel.setVisible(false);
+                    }
+
+                    if (requiredFieldLabel.isVisible())
+                    {
+                        requiredFieldLabel.setVisible(false);
+                    }
+
+                    if (modifyAppointmentErrorLabel.isVisible())
+                    {
+                        modifyAppointmentErrorLabel.setVisible(false);
+                    }
+
+                    if (endBeforeStartLabel.isVisible())
+                    {
+                        endBeforeStartLabel.setVisible(false);
+                    }
                 }
             }
         }
+        catch (DateTimeParseException e)
+        {
+            System.out.println("Date/Time was not entered in correct format - please check prompt text and try again");
+            requiredFieldLabel.setVisible(true);
+        }
         catch (OverlappingAppointmentException e) {
             System.out.println("Appointment conflicts with an existing - please try again.");
+            appointmentConflictLabel.setVisible(true);
         }
         catch (IllegalArgumentException e){
             e.printStackTrace();
@@ -160,6 +230,11 @@ public class AppointmentRecordsController {
         catch (ArrayIndexOutOfBoundsException e)
         {
             System.out.println("Appointment start and/or end fields were entered incorrectly - please reenter in the prompted format.");
+            requiredFieldLabel.setVisible(true);
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
         }
 
 
@@ -307,6 +382,9 @@ public class AppointmentRecordsController {
 
         noCustomerSelectedLabel.setVisible(false);
         modifyAppointmentErrorLabel.setVisible(false);
+        appointmentConflictLabel.setVisible(false);
+        requiredFieldLabel.setVisible(false);
+        endBeforeStartLabel.setVisible(false);
 
         try {
             ResultSet customers = Database.getAllCustomers();

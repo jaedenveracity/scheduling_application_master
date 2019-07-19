@@ -62,5 +62,8 @@
       <Label layoutX="574.0" layoutY="289.0" prefHeight="17.0" prefWidth="54.0" text="Week:" />
       <ComboBox fx:id="monthComboBoxSelector" layoutX="402.0" layoutY="285.0" onAction="#specificMonthChosen" prefWidth="150.0" />
       <ComboBox fx:id="weekComboBoxSelector" layoutX="618.0" layoutY="285.0" onAction="#specificWeekChosen" prefWidth="150.0" />
+      <Label fx:id="appointmentConflictLabel" layoutX="574.0" layoutY="364.0" prefHeight="17.0" prefWidth="458.0" text="An appointment conflicts with an existing - please check the schedule and try again." textFill="RED" />
+      <Label fx:id="requiredFieldLabel" layoutX="183.0" layoutY="364.0" prefHeight="17.0" prefWidth="347.0" text="A field that is required - was not entered. Please try again." textFill="RED" />
+      <Label fx:id="endBeforeStartLabel" layoutX="180.0" layoutY="378.0" prefHeight="17.0" prefWidth="354.0" text="Ending of appointment entered is before/equal to start. Try again." textFill="RED" />
    </children>
 </AnchorPane>
