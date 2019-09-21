@@ -597,3 +597,4 @@
 2019-07-19:14:16:13 - User login was successful with Username: 'test' Location: America/Chicago
 2019-07-19:14:16:46 - User login was successful with Username: 'test' Location: America/Chicago
 2019-07-19:14:17:08 - User login was successful with Username: 'test' Location: America/Chicago
+2019-08-05:17:22:21 - User login was successful with Username: 'test' Location: America/Chicago
